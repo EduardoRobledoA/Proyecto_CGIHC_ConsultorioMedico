@@ -1,0 +1,30 @@
+Sólo es necesario hacer copy-paste. Para las que están
+separadas por un salto, copiar cada renglón individualmente.
+La última dependencia (separada por ;) puede copy-pastearse 
+en una sola línea (también las demás, si se separan por ;)
+
+
+Propiedades de configuración:
+	General:
+		Directorio de salida:..\..\..\..\bin
+	Depuración:
+		Directorio de trabajo:..\..\..\bin\
+C/C++:
+	General:
+		Directorios de inclusión adicionales:
+			<ruta completa hasta la carpeta codes>\codes\deps\glad\MSVC2022\include
+			<ruta completa hasta la carpeta codes>\codes\deps\glfw\MSVC2022\include
+			<ruta completa hasta la carpeta codes>\codes\deps\glm
+			<ruta completa hasta la carpeta codes>\codes\deps\assimp\MSVC2022\include
+			<ruta completa hasta la carpeta codes>\codes\deps\irrklang\include
+			<ruta completa hasta la carpeta codes>\codes\ProyectoFinal\include
+Vinculador:
+	General:
+		Directorios de bibliotecas adicionales:
+			<ruta completa hasta la carpeta codes>\codes\deps\glad\MSVC2022\lib\x64\Debug
+			<ruta completa hasta la carpeta codes>\codes\deps\glfw\MSVC2022\lib\x64\Debug
+			<ruta completa hasta la carpeta codes>\codes\deps\assimp\MSVC2022\lib\x64\Debug
+			<ruta completa hasta la carpeta codes>\codes\deps\irrklang\lib\Winx64-visualStudio
+	Entrada:
+		Dependencias adicionales:
+			glad.lib;glfw3.lib;opengl32.lib;assimp-vc143-mtd.lib;irrKlang.lib
