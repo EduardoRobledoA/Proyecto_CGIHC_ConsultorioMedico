@@ -12,15 +12,17 @@ enum Camera_Movement {
     FORWARD,
     BACKWARD,
     LEFT,
-    RIGHT
+    RIGHT,
+    UP,
+    DOWN
 };
 
 // Default camera values
-const float YAW         = -90.0f;
-const float PITCH       =  0.0f;
-const float SPEED       =  2.5f;
-const float SENSITIVITY =  0.5f;
-const float ZOOM        =  45.0f;
+const float YAW = -90.0f;
+const float PITCH = 0.0f;
+const float SPEED = 10.5f;
+const float SENSITIVITY = 0.5f;
+const float ZOOM = 45.0f;
 
 
 // An abstract camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
@@ -74,7 +76,7 @@ public:
             Position.x += Front.x * velocity;
             Position.z += Front.z * velocity;
         }
-        if (direction == BACKWARD){
+        if (direction == BACKWARD) {
             Position.x -= Front.x * velocity;
             Position.z -= Front.z * velocity;
         }
@@ -82,6 +84,16 @@ public:
             Position -= Right * velocity;
         if (direction == RIGHT)
             Position += Right * velocity;
+        if (direction == UP) {
+            Position.y += Up.y * velocity;
+            Position.x -= Front.x * velocity;
+            Position.z -= Front.z * velocity;
+        }
+        if (direction == DOWN) {
+            Position.y -= Up.y * velocity;
+            Position.x += Front.x * velocity;
+            Position.z += Front.z * velocity;
+        }
     }
 
     // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
@@ -90,7 +102,7 @@ public:
         xoffset *= MouseSensitivity;
         yoffset *= MouseSensitivity;
 
-        Yaw   += xoffset;
+        Yaw += xoffset;
         Pitch += yoffset;
 
         // Make sure that when pitch is out of bounds, screen doesn't get flipped
@@ -129,7 +141,7 @@ private:
         Front = glm::normalize(front);
         // Also re-calculate the Right and Up vector
         Right = glm::normalize(glm::cross(Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-        Up    = glm::normalize(glm::cross(Right, Front));
+        Up = glm::normalize(glm::cross(Right, Front));
     }
 };
 #endif
