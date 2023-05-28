@@ -188,7 +188,7 @@ bool Start() {
 	hospital = new Model("models/FachadaConsultorio.fbx"); // Cargar aquí el modelo del consultorio
 	//door = new Model("models/Door.fbx"); 
 
-	character = new Model("models/character.fbx"); // Cargar modelo del personaje
+	character = new Model("models/doctorColor.fbx"); // Cargar modelo del personaje
 
 	// Cubemap
 	vector<std::string> faces
@@ -204,7 +204,8 @@ bool Start() {
 	mainCubeMap->loadCubemap(faces);
 	
 	// time, arrays
-	character->SetPose(0.0f, gBones);
+	// Variables de los personajes animados
+	character->SetPose(0.0f, gBones);//Pose inicial, y se sobreescribe en cada frame.
 
 	fps = (float)character->getFramerate();
 	keys = (int)character->getNumFrames();
@@ -395,7 +396,6 @@ bool Update() {
 	
 	
 	// Objetos animados por keyframes
-	/*
 	 {
 		// Activación del shader del personaje
 		ourShader->use();
@@ -432,8 +432,6 @@ bool Update() {
 	}
 
 	glUseProgram(0); 
-
-	*/
 
 	// glfw: swap buffers 
 	glfwSwapBuffers(window);
