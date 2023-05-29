@@ -12,19 +12,19 @@ Propiedades de configuración:
 C/C++:
 	General:
 		Directorios de inclusión adicionales:
-			<ruta completa hasta la carpeta codes>\codes\deps\glad\MSVC2022\include
-			<ruta completa hasta la carpeta codes>\codes\deps\glfw\MSVC2022\include
-			<ruta completa hasta la carpeta codes>\codes\deps\glm
-			<ruta completa hasta la carpeta codes>\codes\deps\assimp\MSVC2022\include
-			<ruta completa hasta la carpeta codes>\codes\deps\irrklang\include
-			<ruta completa hasta la carpeta codes>\codes\ProyectoFinal\include
+			$(SolutionDir)\..\..\deps\glad\MSVC2022\include
+			$(SolutionDir)\..\..\deps\glfw\MSVC2022\include
+			$(SolutionDir)\..\..\deps\glm
+			$(SolutionDir)\..\..\deps\assimp\MSVC2022\include
+			$(SolutionDir)\..\..\deps\irrklang\include
+			$(SolutionDir)\..\include
 Vinculador:
 	General:
 		Directorios de bibliotecas adicionales:
-			<ruta completa hasta la carpeta codes>\codes\deps\glad\MSVC2022\lib\x64\Debug
-			<ruta completa hasta la carpeta codes>\codes\deps\glfw\MSVC2022\lib\x64\Debug
-			<ruta completa hasta la carpeta codes>\codes\deps\assimp\MSVC2022\lib\x64\Debug
-			<ruta completa hasta la carpeta codes>\codes\deps\irrklang\lib\Winx64-visualStudio
+			$(SolutionDir)\..\..\deps\glad\MSVC2022\lib\x64\Debug
+			$(SolutionDir)\..\..\deps\glfw\MSVC2022\lib\x64\Debug
+			$(SolutionDir)\..\..\deps\assimp\MSVC2022\lib\x64\Debug
+			$(SolutionDir)\..\..\deps\irrklang\lib\Winx64-visualStudio
 	Entrada:
 		Dependencias adicionales:
 			glad.lib;glfw3.lib;opengl32.lib;assimp-vc143-mtd.lib;irrKlang.lib
