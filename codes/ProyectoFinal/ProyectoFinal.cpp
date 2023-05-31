@@ -82,7 +82,7 @@ Shader *proceduralShader;
 Shader *wavesShader;
 
 // Carga la información del modelo (poner referencias de los modelos a utilizar)
-Model	*character;
+Model	*doctorCaminando;
 Model	*hospital;
 Model   *door;
 
@@ -189,7 +189,8 @@ bool Start() {
 	hospital = new Model("models/FachadaConsultorio.fbx"); // Cargar aquí el modelo del consultorio
 	//door = new Model("models/Door.fbx"); 
 
-	character = new Model("models/doctorColor.fbx"); // Cargar modelo del personaje
+	doctorCaminando = new Model("models/doctorColorParado.fbx"); // Cargar modelo del personaje
+	
 
 	// Cubemap
 	vector<std::string> faces
@@ -206,10 +207,10 @@ bool Start() {
 	
 	// time, arrays
 	// Variables de los personajes animados
-	character->SetPose(0.0f, gBones);//Pose inicial, y se sobreescribe en cada frame.
+	doctorCaminando->SetPose(0.0f, gBones);//Pose inicial, y se sobreescribe en cada frame.
 
-	fps = (float)character->getFramerate();
-	keys = (int)character->getNumFrames();
+	fps = (float)doctorCaminando->getFramerate();
+	keys = (int)doctorCaminando->getNumFrames();
 
 	camera3rd.Position = position;
 	camera3rd.Position.y += 1.7f;
@@ -288,7 +289,7 @@ bool Update() {
 			animationCount = 0;
 		}
 		// Configuración de la pose en el instante t
-		character->SetPose((float)animationCount, gBones);
+		doctorCaminando->SetPose((float)animationCount, gBones);
 		elapsedTime = 0.0f;
 
 	}
@@ -429,7 +430,7 @@ bool Update() {
 		ourShader->setMat4("gBones", MAX_RIGGING_BONES, gBones);
 
 		// Dibujamos el modelo
-		character->Draw(*ourShader);
+		doctorCaminando->Draw(*ourShader);
 	}
 
 	glUseProgram(0); 
