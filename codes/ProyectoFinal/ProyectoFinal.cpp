@@ -70,12 +70,14 @@ float sineTime = 0.0f;
 glm::vec3 position(0.0f,0.0f, 0.0f);
 glm::vec3 forwardView(0.0f, 0.0f, 1.0f);
 float     scaleV = 0.005f;
-float     rotateCharacter = 0.0f;
-float	  door_offset = 0.0f;
+float     rotateCharacter = 0.0f; // variables de los personajes
+bool	  isWalking = false;
+float	  door_offset = 0.0f; // variables de las puertas
 float	  door_rotation = 0.0f;
 
 // Shaders (Referenciar para cada objeto uno diferente si es que se van a realizar animaciones)
-Shader *ourShader;
+Shader *doctorCaminandoShader;
+Shader *doctorParadoShader;
 Shader *cubemapShader;
 Shader *mLightsShader;
 Shader *proceduralShader;
@@ -83,6 +85,7 @@ Shader *wavesShader;
 
 // Carga la información del modelo (poner referencias de los modelos a utilizar)
 Model	*doctorCaminando;
+Model	*doctorParado;
 Model	*hospital;
 Model   *door;
 
@@ -172,12 +175,14 @@ bool Start() {
 	glEnable(GL_DEPTH_TEST);
 
 	// ------------------------ Compilación y enlace de shaders (agregar los shaders necesarios [fs y vs]) -----------------------------
-	ourShader     = new Shader("shaders/10_vertex_skinning-IT.vs", "shaders/10_fragment_skinning-IT.fs");
+	doctorCaminandoShader = new Shader("shaders/10_vertex_skinning-IT.vs", "shaders/10_fragment_skinning-IT.fs");
+	doctorParadoShader = new Shader("shaders/10_vertex_skinning-IT.vs", "shaders/10_fragment_skinning-IT.fs");
 	cubemapShader = new Shader("shaders/10_vertex_cubemap.vs", "shaders/10_fragment_cubemap.fs");
 	mLightsShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
 
 	// Máximo número de huesos: 100
-	ourShader->setBonesIDs(MAX_RIGGING_BONES);
+	doctorCaminandoShader->setBonesIDs(MAX_RIGGING_BONES);
+	doctorParadoShader->setBonesIDs(MAX_RIGGING_BONES);
 
 	// Dibujar en malla de alambre
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
@@ -189,7 +194,8 @@ bool Start() {
 	hospital = new Model("models/FachadaConsultorio.fbx"); // Cargar aquí el modelo del consultorio
 	//door = new Model("models/Door.fbx"); 
 
-	doctorCaminando = new Model("models/doctorColorParado.fbx"); // Cargar modelo del personaje
+	doctorCaminando = new Model("models/doctorColor.fbx"); // Cargar modelo del personaje
+	doctorParado = new Model("models/doctorColorParado.fbx"); // Cargar modelo del personaje
 	
 
 	// Cubemap
@@ -217,7 +223,7 @@ bool Start() {
 	camera3rd.Position -= forwardView;
 	camera3rd.Front = forwardView;
 
-	// --------------------------Lights configuration (se meten a un arreglo, pueden desactivarse)---------------------
+	// --------------------------Lights configuration (se meten a un arreglo, pueden desactivarse)----------------------------
 	
 	Light light01;
 	light01.Position = glm::vec3(5.0f, 2.0f, 5.0f);
@@ -288,8 +294,16 @@ bool Update() {
 		if (animationCount > keys - 1) {
 			animationCount = 0;
 		}
+
 		// Configuración de la pose en el instante t
-		doctorCaminando->SetPose((float)animationCount, gBones);
+		
+		if (isWalking == true){
+			doctorCaminando->SetPose((float)animationCount, gBones);
+		}
+		else {
+			doctorParado->SetPose((float)animationCount, gBones);
+		}
+		
 		elapsedTime = 0.0f;
 
 	}
@@ -398,12 +412,13 @@ bool Update() {
 	
 	
 	// Objetos animados por keyframes
-	 {
+	{
 		// Activación del shader del personaje
-		ourShader->use();
+		doctorCaminandoShader->use();
+		//doctorParadoShader->use();
 
 		// Aplicamos transformaciones de proyección y cámara (si las hubiera)
-		
+
 		glm::mat4 projection;
 		glm::mat4 view;
 
@@ -415,9 +430,12 @@ bool Update() {
 			projection = glm::perspective(glm::radians(camera3rd.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
 			view = camera3rd.GetViewMatrix();
 		}
-		
-		ourShader->setMat4("projection", projection);
-		ourShader->setMat4("view", view);
+
+		doctorCaminandoShader->setMat4("projection", projection);
+		doctorCaminandoShader->setMat4("view", view);
+
+		//doctorParadoShader->setMat4("projection", projection);
+		//doctorParadoShader->setMat4("view", view);
 
 		// Aplicamos transformaciones del modelo
 		glm::mat4 model = glm::mat4(1.0f);
@@ -425,15 +443,68 @@ bool Update() {
 		model = glm::rotate(model, glm::radians(rotateCharacter), glm::vec3(0.0, 1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.008f, 0.008f, 0.008f));	// it's a bit too big for our scene, so scale it down
 
-		ourShader->setMat4("model", model);
+		doctorCaminandoShader->setMat4("model", model);
+		//doctorParadoShader->setMat4("model", model);
 
-		ourShader->setMat4("gBones", MAX_RIGGING_BONES, gBones);
+		doctorCaminandoShader->setMat4("gBones", MAX_RIGGING_BONES, gBones);
+		//doctorParadoShader->setMat4("gBones", MAX_RIGGING_BONES, gBones);
 
-		// Dibujamos el modelo
-		doctorCaminando->Draw(*ourShader);
+		// Dibujamos el modelo en ambos para mantenerlo sincronizado
+		if (isWalking == true)
+			doctorCaminando->Draw(*doctorCaminandoShader);
+	/*
+		else {
+			doctorParado->Draw(*doctorParadoShader);
+		}*/
 	}
 
 	glUseProgram(0); 
+
+	{
+		// Activación del shader del personaje
+		//doctorCaminandoShader->use();
+		doctorParadoShader->use();
+
+		// Aplicamos transformaciones de proyección y cámara (si las hubiera)
+
+		glm::mat4 projection;
+		glm::mat4 view;
+
+		if (activeCamera) {
+			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
+			view = camera.GetViewMatrix();
+		}
+		else {
+			projection = glm::perspective(glm::radians(camera3rd.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
+			view = camera3rd.GetViewMatrix();
+		}
+
+		//doctorCaminandoShader->setMat4("projection", projection);
+		//doctorCaminandoShader->setMat4("view", view);
+
+		doctorParadoShader->setMat4("projection", projection);
+		doctorParadoShader->setMat4("view", view);
+
+		// Aplicamos transformaciones del modelo
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, position); // translate it down so it's at the center of the scene
+		model = glm::rotate(model, glm::radians(rotateCharacter), glm::vec3(0.0, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.008f, 0.008f, 0.008f));	// it's a bit too big for our scene, so scale it down
+
+		//doctorCaminandoShader->setMat4("model", model);
+		doctorParadoShader->setMat4("model", model);
+
+		//doctorCaminandoShader->setMat4("gBones", MAX_RIGGING_BONES, gBones);
+		doctorParadoShader->setMat4("gBones", MAX_RIGGING_BONES, gBones);
+
+		// Dibujamos el modelo en ambos para mantenerlo sincronizado
+		if (isWalking != true)
+			doctorParado->Draw(*doctorParadoShader);
+		/*
+		else {
+			doctorParado->Draw(*doctorParadoShader);
+		}*/
+	}
 
 	// glfw: swap buffers 
 	glfwSwapBuffers(window);
@@ -486,7 +557,7 @@ void processInput(GLFWwindow* window)
 	*/
 	// Character movement
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-
+		isWalking = true;
 		position = position + scaleV * forwardView;
 		camera3rd.Front = forwardView;
 		camera3rd.ProcessKeyboard(FORWARD, deltaTime);
@@ -496,6 +567,7 @@ void processInput(GLFWwindow* window)
 
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+		isWalking = true;
 		position = position - scaleV * forwardView;
 		camera3rd.Front = forwardView;
 		camera3rd.ProcessKeyboard(BACKWARD, deltaTime);
@@ -504,6 +576,7 @@ void processInput(GLFWwindow* window)
 		camera3rd.Position -= forwardView;
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		isWalking = true;
 		rotateCharacter += 0.5f;
 
 		glm::mat4 model = glm::mat4(1.0f);
@@ -518,6 +591,7 @@ void processInput(GLFWwindow* window)
 		camera3rd.Position -= forwardView;
 	}
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+		isWalking = true;
 		rotateCharacter -= 0.5f;
 
 		glm::mat4 model = glm::mat4(1.0f);
@@ -530,6 +604,9 @@ void processInput(GLFWwindow* window)
 		camera3rd.Position = position;
 		camera3rd.Position.y += 1.7f;
 		camera3rd.Position -= forwardView;
+	}
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) != GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT) != GLFW_PRESS && glfwGetKey(window, GLFW_KEY_UP) != GLFW_PRESS && glfwGetKey(window, GLFW_KEY_DOWN) != GLFW_PRESS) {
+		isWalking = false;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS)
