@@ -83,6 +83,7 @@ Shader *mLightsShader;
 Shader *proceduralShader;
 Shader *wavesShader;
 Shader *staticShader;
+Shader *fresnelShader;
 
 // Carga la información del modelo (poner referencias de los modelos a utilizar)
 Model	*doctorCaminando;
@@ -91,6 +92,13 @@ Model	*hospital;
 Model   *door;
 Model   *floorObject;
 Model	*Pancreas;
+Model	*Stomach;
+Model	*SmallIntestine;
+Model	*LargeIntestine;
+Model	*Esophagus;
+Model	*Heart;
+Model	*Glass;
+Model	*MetalBase;
 
 // Variables globales (que van a variar durante la ejecución del ciclo de renderizado)
 float tradius = 10.0f;
@@ -183,6 +191,7 @@ bool Start() {
 	cubemapShader = new Shader("shaders/10_vertex_cubemap.vs", "shaders/10_fragment_cubemap.fs");
 	mLightsShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
 	staticShader = new Shader("shaders/10_vertex_simple.vs", "shaders/10_fragment_simple.fs");
+	fresnelShader = new Shader("shaders/11_Fresnel.vs", "shaders/11_Fresnel.fs");
 
 	// Máximo número de huesos: 100
 	doctorCaminandoShader->setBonesIDs(MAX_RIGGING_BONES);
@@ -203,6 +212,13 @@ bool Start() {
 	
 	floorObject = new Model("models/floor.fbx");
 	Pancreas = new Model("models/Pancreas.fbx");
+	Stomach = new Model("models/Stomach.fbx");
+	SmallIntestine = new Model("models/SmallIntestine.fbx");
+	LargeIntestine = new Model("models/LargeIntestine.fbx");
+	Esophagus = new Model("models/Esophagus.fbx");
+	Heart = new Model("models/Heart.fbx");
+	Glass = new Model("models/Glass.fbx");
+	MetalBase = new Model("models/MetalBase.fbx");
 
 	// Cubemap
 	vector<std::string> faces
@@ -430,17 +446,101 @@ bool Update() {
 		floorObject->Draw(*staticShader);
 
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-13.0f, 5.0f, -4.0f)); // translate it down so it's at the center of the scene
+		model = glm::translate(model, glm::vec3(-12.8f, 5.2f, -2.7f)); // translate it down so it's at the center of the scene
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));	// it's a bit too big for our scene, so scale it down
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
 		staticShader->setMat4("model", model);
 
 		Pancreas->Draw(*staticShader);
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-12.5f, 6.0f, -4.0f)); // translate it down so it's at the center of the scene
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
+		staticShader->setMat4("model", model);
+
+		Stomach->Draw(*staticShader);
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-12.5f, 4.5f, -2.9f)); // translate it down so it's at the center of the scene
+		model = glm::rotate(model, glm::radians(-110.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(-270.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));	// it's a bit too big for our scene, so scale it down
+		staticShader->setMat4("model", model);
+
+		SmallIntestine->Draw(*staticShader);
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-12.25f, 4.3f, -3.4f)); // translate it down so it's at the center of the scene
+		model = glm::rotate(model, glm::radians(360.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.17f));	// it's a bit too big for our scene, so scale it down
+		staticShader->setMat4("model", model);
+
+		LargeIntestine->Draw(*staticShader);
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-12.5f, 6.4f, -3.5f)); // translate it down so it's at the center of the scene
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.07f, 0.09f, 0.07f));	// it's a bit too big for our scene, so scale it down
+		staticShader->setMat4("model", model);
+
+		Esophagus->Draw(*staticShader);
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-12.25f, 6.7f, -4.2f)); // translate it down so it's at the center of the scene
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
+		staticShader->setMat4("model", model);
+
+		Heart->Draw(*staticShader);
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-12.5f, 1.25f, -3.5f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.25f));
+		staticShader->setMat4("model", model);
+
+		MetalBase->Draw(*staticShader);
 	}
 
 	glUseProgram(0);
 
+	
+	// Dibujamos vidrio
+	{
+		// Activamos el shader de fresnel
+		fresnelShader->use();
 
+		// Activamos para objetos transparentes
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		// Aplicamos transformaciones de proyección y cámara (si las hubiera)
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
+		glm::mat4 view = camera.GetViewMatrix();
+		fresnelShader->setMat4("projection", projection);
+		fresnelShader->setMat4("view", view);
+
+		// Aplicamos transformaciones del modelo
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-12.5f, 5.0f, -3.5f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.5f, 1.5f, 2.5f));
+		fresnelShader->setMat4("model", model);
+		fresnelShader->setFloat("time", sineTime);
+		sineTime += 0.001;
+		fresnelShader->setFloat("transparency", 0.2f);
+
+		glDepthMask(GL_FALSE);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, mainCubeMap->textureID);
+		glDepthMask(GL_TRUE);
+		Glass->Draw(*fresnelShader);
+
+
+
+	}
+
+	glUseProgram(0); 
 
 	// Animaciones procedurales
 	/*
