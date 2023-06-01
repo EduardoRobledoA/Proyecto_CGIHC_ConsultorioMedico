@@ -204,7 +204,7 @@ bool Start() {
 	// Para organización, crear el objeto y llamarlo por lo que es. Ejemplo:
 	// 
 	// consultorio = new Model("models/ProyectoFinal/<nombre_del_archivo>.fbx")
-	hospital = new Model("models/FachadaConsultorio.fbx"); // Cargar aquí el modelo del consultorio
+	hospital = new Model("models/FachadaConsultorioTest1.fbx"); // Cargar aquí el modelo del consultorio
 	//door = new Model("models/Door.fbx"); 
 
 	doctorCaminando = new Model("models/doctorColor.fbx"); // Cargar modelo del personaje
@@ -223,12 +223,12 @@ bool Start() {
 	// Cubemap
 	vector<std::string> faces
 	{
-		"textures/cubemap/01/posx.png",
-		"textures/cubemap/01/negx.png",
-		"textures/cubemap/01/posy.png",
-		"textures/cubemap/01/negy.png",
-		"textures/cubemap/01/posz.png",
-		"textures/cubemap/01/negz.png"
+		"textures/cubemap/01/posx.jpeg",
+		"textures/cubemap/01/negx.jpeg",
+		"textures/cubemap/01/posy.jpeg",
+		"textures/cubemap/01/negy.jpeg",
+		"textures/cubemap/01/posz.jpeg",
+		"textures/cubemap/01/negz.jpeg"
 	};
 	mainCubeMap = new CubeMap();
 	mainCubeMap->loadCubemap(faces);
@@ -350,7 +350,7 @@ bool Update() {
 			projection = glm::perspective(glm::radians(camera3rd.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
 			view = camera3rd.GetViewMatrix();
 		}
-		
+
 		mainCubeMap->drawCubeMap(*cubemapShader, projection, view);
 	}
 	
@@ -501,6 +501,7 @@ bool Update() {
 		staticShader->setMat4("model", model);
 
 		MetalBase->Draw(*staticShader);
+
 	}
 
 	glUseProgram(0);
