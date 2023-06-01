@@ -107,13 +107,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\deps\glad\MSVC2022\include;D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\deps\glfw\MSVC2022\include;D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\deps\glm;D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\deps\assimp\MSVC2022\include;D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\deps\irrklang\include;D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\ProyectoFinal\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\deps\glad\MSVC2022\include;$(SolutionDir)\..\..\deps\glfw\MSVC2022\include;$(SolutionDir)\..\..\deps\glm;$(SolutionDir)\..\..\deps\assimp\MSVC2022\include;$(SolutionDir)\..\..\deps\irrklang\include;$(SolutionDir)\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glad.lib;glfw3.lib;opengl32.lib;assimp-vc143-mtd.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\deps\glad\MSVC2022\lib\x64\Debug;D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\deps\glfw\MSVC2022\lib\x64\Debug;D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\deps\assimp\MSVC2022\lib\x64\Debug;D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\deps\irrklang\lib\Winx64-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\deps\glad\MSVC2022\lib\x64\Debug;$(SolutionDir)\..\..\deps\glfw\MSVC2022\lib\x64\Debug;$(SolutionDir)\..\..\deps\assimp\MSVC2022\lib\x64\Debug;$(SolutionDir)\..\..\deps\irrklang\lib\Winx64-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

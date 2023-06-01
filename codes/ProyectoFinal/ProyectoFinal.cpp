@@ -47,12 +47,12 @@ void processInput(GLFWwindow *window);
 GLFWwindow* window;
 
 // Tamaño en pixeles de la ventana
-const unsigned int SCR_WIDTH = 1024;
-const unsigned int SCR_HEIGHT = 768;
+const unsigned int SCR_WIDTH = 1920;
+const unsigned int SCR_HEIGHT = 1080;
 
 // Definición de cámara (posición en XYZ)
-Camera camera(glm::vec3(0.0f, 2.0f, 10.0f));
-Camera camera3rd(glm::vec3(0.0f, 0.0f, 0.0f));
+Camera camera(glm::vec3(0.0f, 5.0f, 10.0f));
+Camera camera3rd(glm::vec3(0.0f, 10.0f, 5.0f));
 
 // Controladores para el movimiento del mouse
 float lastX = SCR_WIDTH / 2.0f;
@@ -67,7 +67,7 @@ float elapsedTime = 0.0f;
 
 float sineTime = 0.0f;
 
-glm::vec3 position(0.0f,0.0f, 0.0f);
+glm::vec3 position(0.0f, 0.0f, 0.0f);
 glm::vec3 forwardView(0.0f, 0.0f, 1.0f);
 float     scaleV = 0.005f;
 float     rotateCharacter = 0.0f; // variables de los personajes
@@ -82,12 +82,15 @@ Shader *cubemapShader;
 Shader *mLightsShader;
 Shader *proceduralShader;
 Shader *wavesShader;
+Shader *staticShader;
 
 // Carga la información del modelo (poner referencias de los modelos a utilizar)
 Model	*doctorCaminando;
 Model	*doctorParado;
 Model	*hospital;
 Model   *door;
+Model   *floorObject;
+Model	*Pancreas;
 
 // Variables globales (que van a variar durante la ejecución del ciclo de renderizado)
 float tradius = 10.0f;
@@ -179,6 +182,7 @@ bool Start() {
 	doctorParadoShader = new Shader("shaders/10_vertex_skinning-IT.vs", "shaders/10_fragment_skinning-IT.fs");
 	cubemapShader = new Shader("shaders/10_vertex_cubemap.vs", "shaders/10_fragment_cubemap.fs");
 	mLightsShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
+	staticShader = new Shader("shaders/10_vertex_simple.vs", "shaders/10_fragment_simple.fs");
 
 	// Máximo número de huesos: 100
 	doctorCaminandoShader->setBonesIDs(MAX_RIGGING_BONES);
@@ -197,6 +201,8 @@ bool Start() {
 	doctorCaminando = new Model("models/doctorColor.fbx"); // Cargar modelo del personaje
 	doctorParado = new Model("models/doctorColorParado.fbx"); // Cargar modelo del personaje
 	
+	floorObject = new Model("models/floor.fbx");
+	Pancreas = new Model("models/Pancreas.fbx");
 
 	// Cubemap
 	vector<std::string> faces
@@ -399,6 +405,41 @@ bool Update() {
 	}
 
 	glUseProgram(0);
+
+	{
+		// Activamos el shader del plano
+		staticShader->use();
+
+		// Activamos para objetos transparentes
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		// Aplicamos transformaciones de proyección y cámara (si las hubiera)
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
+		glm::mat4 view = camera.GetViewMatrix();
+		staticShader->setMat4("projection", projection);
+		staticShader->setMat4("view", view);
+
+		// Aplicamos transformaciones del modelo
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, -0.1f, 0.0f)); // translate it down so it's at the center of the scene
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));	// it's a bit too big for our scene, so scale it down
+		staticShader->setMat4("model", model);
+
+		floorObject->Draw(*staticShader);
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-13.0f, 5.0f, -4.0f)); // translate it down so it's at the center of the scene
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));	// it's a bit too big for our scene, so scale it down
+		staticShader->setMat4("model", model);
+
+		Pancreas->Draw(*staticShader);
+	}
+
+	glUseProgram(0);
+
 
 
 	// Animaciones procedurales
