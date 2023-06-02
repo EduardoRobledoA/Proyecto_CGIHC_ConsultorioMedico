@@ -210,6 +210,7 @@ bool Start() {
 	doctorCaminando = new Model("models/doctorColor.fbx"); // Cargar modelo del personaje
 	doctorParado = new Model("models/doctorColorParado.fbx"); // Cargar modelo del personaje
 	
+	//Órganos:
 	floorObject = new Model("models/floor.fbx");
 	Pancreas = new Model("models/Pancreas.fbx");
 	Stomach = new Model("models/Stomach.fbx");
@@ -236,12 +237,17 @@ bool Start() {
 	// time, arrays
 	// Variables de los personajes animados
 	doctorCaminando->SetPose(0.0f, gBones);//Pose inicial, y se sobreescribe en cada frame.
-
+	doctorParado->SetPose(0.0f, gBones);
+	
 	fps = (float)doctorCaminando->getFramerate();
 	keys = (int)doctorCaminando->getNumFrames();
-
+	/*
+	fps = (float)doctorParado->getFramerate();
+	keys = (int)doctorParado->getNumFrames();
+	*/
 	camera3rd.Position = position;
-	camera3rd.Position.y += 1.7f;
+	camera3rd.Position.y += 5.0f;
+	camera3rd.Position.z += 3.0f;
 	camera3rd.Position -= forwardView;
 	camera3rd.Front = forwardView;
 
@@ -318,14 +324,17 @@ bool Update() {
 		}
 
 		// Configuración de la pose en el instante t
-		
-		if (isWalking == true){
-			doctorCaminando->SetPose((float)animationCount, gBones);
+		if (activeCamera) {
+			if (isWalking == true) {
+				doctorCaminando->SetPose((float)animationCount, gBones);
+			}
+			else {
+				doctorParado->SetPose((float)animationCount, gBones);
+			}
 		}
 		else {
-			doctorParado->SetPose((float)animationCount, gBones);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
-		
 		elapsedTime = 0.0f;
 
 	}
@@ -557,7 +566,7 @@ bool Update() {
 	{
 		// Activación del shader del personaje
 		doctorCaminandoShader->use();
-		//doctorParadoShader->use();
+		doctorParadoShader->use();
 
 		// Aplicamos transformaciones de proyección y cámara (si las hubiera)
 
@@ -576,54 +585,6 @@ bool Update() {
 		doctorCaminandoShader->setMat4("projection", projection);
 		doctorCaminandoShader->setMat4("view", view);
 
-		//doctorParadoShader->setMat4("projection", projection);
-		//doctorParadoShader->setMat4("view", view);
-
-		// Aplicamos transformaciones del modelo
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, position); // translate it down so it's at the center of the scene
-		model = glm::rotate(model, glm::radians(rotateCharacter), glm::vec3(0.0, 1.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.008f, 0.008f, 0.008f));	// it's a bit too big for our scene, so scale it down
-
-		doctorCaminandoShader->setMat4("model", model);
-		//doctorParadoShader->setMat4("model", model);
-
-		doctorCaminandoShader->setMat4("gBones", MAX_RIGGING_BONES, gBones);
-		//doctorParadoShader->setMat4("gBones", MAX_RIGGING_BONES, gBones);
-
-		// Dibujamos el modelo en ambos para mantenerlo sincronizado
-		if (isWalking == true)
-			doctorCaminando->Draw(*doctorCaminandoShader);
-	/*
-		else {
-			doctorParado->Draw(*doctorParadoShader);
-		}*/
-	}
-
-	glUseProgram(0); 
-
-	{
-		// Activación del shader del personaje
-		//doctorCaminandoShader->use();
-		doctorParadoShader->use();
-
-		// Aplicamos transformaciones de proyección y cámara (si las hubiera)
-
-		glm::mat4 projection;
-		glm::mat4 view;
-
-		if (activeCamera) {
-			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
-			view = camera.GetViewMatrix();
-		}
-		else {
-			projection = glm::perspective(glm::radians(camera3rd.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
-			view = camera3rd.GetViewMatrix();
-		}
-
-		//doctorCaminandoShader->setMat4("projection", projection);
-		//doctorCaminandoShader->setMat4("view", view);
-
 		doctorParadoShader->setMat4("projection", projection);
 		doctorParadoShader->setMat4("view", view);
 
@@ -633,20 +594,24 @@ bool Update() {
 		model = glm::rotate(model, glm::radians(rotateCharacter), glm::vec3(0.0, 1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.008f, 0.008f, 0.008f));	// it's a bit too big for our scene, so scale it down
 
-		//doctorCaminandoShader->setMat4("model", model);
+		doctorCaminandoShader->setMat4("model", model);
 		doctorParadoShader->setMat4("model", model);
 
-		//doctorCaminandoShader->setMat4("gBones", MAX_RIGGING_BONES, gBones);
+		doctorCaminandoShader->setMat4("gBones", MAX_RIGGING_BONES, gBones);
 		doctorParadoShader->setMat4("gBones", MAX_RIGGING_BONES, gBones);
 
 		// Dibujamos el modelo en ambos para mantenerlo sincronizado
-		if (isWalking != true)
-			doctorParado->Draw(*doctorParadoShader);
-		/*
-		else {
-			doctorParado->Draw(*doctorParadoShader);
-		}*/
+		if (activeCamera) {
+			if (isWalking == true) {
+				doctorCaminando->Draw(*doctorCaminandoShader);
+			}
+			else {
+				doctorParado->Draw(*doctorParadoShader);
+			}
+		}
 	}
+
+	glUseProgram(0); 
 
 	// glfw: swap buffers 
 	glfwSwapBuffers(window);
@@ -704,7 +669,7 @@ void processInput(GLFWwindow* window)
 		camera3rd.Front = forwardView;
 		camera3rd.ProcessKeyboard(FORWARD, deltaTime);
 		camera3rd.Position = position;
-		camera3rd.Position.y += 1.7f;
+		camera3rd.Position.y += 5.0f;
 		camera3rd.Position -= forwardView;
 
 	}
@@ -714,7 +679,7 @@ void processInput(GLFWwindow* window)
 		camera3rd.Front = forwardView;
 		camera3rd.ProcessKeyboard(BACKWARD, deltaTime);
 		camera3rd.Position = position;
-		camera3rd.Position.y += 1.7f;
+		camera3rd.Position.y += 5.0f;
 		camera3rd.Position -= forwardView;
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
@@ -729,7 +694,7 @@ void processInput(GLFWwindow* window)
 
 		camera3rd.Front = forwardView;
 		camera3rd.Position = position;
-		camera3rd.Position.y += 1.7f;
+		camera3rd.Position.y += 5.0f;
 		camera3rd.Position -= forwardView;
 	}
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
@@ -744,7 +709,7 @@ void processInput(GLFWwindow* window)
 
 		camera3rd.Front = forwardView;
 		camera3rd.Position = position;
-		camera3rd.Position.y += 1.7f;
+		camera3rd.Position.y += 5.0f;
 		camera3rd.Position -= forwardView;
 	}
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) != GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT) != GLFW_PRESS && glfwGetKey(window, GLFW_KEY_UP) != GLFW_PRESS && glfwGetKey(window, GLFW_KEY_DOWN) != GLFW_PRESS) {
