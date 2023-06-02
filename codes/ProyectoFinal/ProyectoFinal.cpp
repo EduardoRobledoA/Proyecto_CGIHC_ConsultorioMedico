@@ -72,8 +72,8 @@ glm::vec3 forwardView(0.0f, 0.0f, 1.0f);
 float     scaleV = 0.005f;
 float     rotateCharacter = 0.0f; // variables de los personajes
 bool	  isWalking = false;
-float	  door_offset = 0.0f; // variables de las puertas
-float	  door_rotation = 0.0f;
+//float	  door_offset = 0.0f; // variables de las puertas
+float	  puerta_rotation = 0.0f;
 
 // Shaders (Referenciar para cada objeto uno diferente si es que se van a realizar animaciones)
 Shader *doctorCaminandoShader;
@@ -84,12 +84,15 @@ Shader *proceduralShader;
 Shader *wavesShader;
 Shader *staticShader;
 Shader *fresnelShader;
+Shader *puertaShader;
+Shader *metalPhongShader;
 
 // Carga la información del modelo (poner referencias de los modelos a utilizar)
 Model	*doctorCaminando;
 Model	*doctorParado;
 Model	*hospital;
-Model   *door;
+Model   *puerta;
+Model   *escritorio;
 Model   *floorObject;
 Model	*Pancreas;
 Model	*Stomach;
@@ -109,8 +112,11 @@ float alpha = 0.0f;
 CubeMap *mainCubeMap;
 
 // Materiales 
-//(aquí podemos agregar los necesarios para darle a los objetos acabados metálicos, de madera, transparentes, etc)
+/*(aquí podemos agregar los necesarios para darle a los objetos acabados metálicos, de madera, transparentes, etc)
+Sugerencia: Material <tipoDeMaterial>
+*/
 Material material01;
+Material metal02;
 
 // Light gLight;
 std::vector<Light> gLights;
@@ -128,7 +134,9 @@ float proceduralTime = 0.0f;
 float wavesTime = 0.0f;
 
 // Audio (se pueden agregar para que se ejecuten cuando se abra una puerta por ejemplo)
-//ISoundEngine *SoundEngine = createIrrKlangDevice();
+ISoundEngine *SoundEngine = createIrrKlangDevice();//Creación del motor de sonido---------------------------------------------------------------------------------------------
+irrklang::ISoundSource *voz = SoundEngine->addSoundSourceFromFile("sound/Dialogo.mp3"); // revisar línea 245 para más info
+irrklang::ISound *vozSonando;
 
 // selección de cámara
 bool    activeCamera = 1; // activamos la primera cámara
@@ -192,6 +200,8 @@ bool Start() {
 	mLightsShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
 	staticShader = new Shader("shaders/10_vertex_simple.vs", "shaders/10_fragment_simple.fs");
 	fresnelShader = new Shader("shaders/11_Fresnel.vs", "shaders/11_Fresnel.fs");
+	puertaShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
+	metalPhongShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
 
 	// Máximo número de huesos: 100
 	doctorCaminandoShader->setBonesIDs(MAX_RIGGING_BONES);
@@ -205,7 +215,8 @@ bool Start() {
 	// 
 	// consultorio = new Model("models/ProyectoFinal/<nombre_del_archivo>.fbx")
 	hospital = new Model("models/FachadaConsultorioTest1.fbx"); // Cargar aquí el modelo del consultorio
-	//door = new Model("models/Door.fbx"); 
+	puerta = new Model("models/Puerta.fbx"); //Modelo de la puerta
+	escritorio = new Model("models/Escritorio.fbx");
 
 	doctorCaminando = new Model("models/doctorColor.fbx"); // Cargar modelo del personaje
 	doctorParado = new Model("models/doctorColorParado.fbx"); // Cargar modelo del personaje
@@ -242,9 +253,10 @@ bool Start() {
 	fps = (float)doctorCaminando->getFramerate();
 	keys = (int)doctorCaminando->getNumFrames();
 	/*
-	fps = (float)doctorParado->getFramerate();
+	fps = (float)doctorParado->getFramerate(); // Dado que tiene más frames, tiende a crashear el programa
 	keys = (int)doctorParado->getNumFrames();
 	*/
+	// Inicialización de la cámara (3ra persona)
 	camera3rd.Position = position;
 	camera3rd.Position.y += 5.0f;
 	camera3rd.Position -= forwardView;
@@ -271,9 +283,16 @@ bool Start() {
 	light04.Position = glm::vec3(-5.0f, 2.0f, -5.0f);
 	light04.Color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
 	gLights.push_back(light04);
+
+	//------------------------------------------------- Editando instancias de propiedades del material--------------------------------
+	// Acabado metálico
+	metal02.ambient = glm::vec4(0.19225f, 0.19225f, 0.19225f, 1.0f);
+	metal02.diffuse = glm::vec4(0.50754f, 0.50754f, 0.50754f, 1.0f);
+	metal02.specular = glm::vec4(0.508273f, 0.508273f, 0.508273f, 1.0f);
 	
-	// --------------------------------------------------Efectos de sonido -----------------------------------------
-	// SoundEngine->play2D("sound/EternalGarden.mp3", true);
+	// --------------------------------------------------Efectos de sonido (sólo inicializaciones) -----------------------------------------
+	voz->setDefaultVolume(0.5f); //Estableciendo volumen
+	vozSonando = SoundEngine->play2D(voz, false, true); //preparando sonido (inicializado en mute).
 
 	return true;
 }
@@ -323,7 +342,7 @@ bool Update() {
 		}
 
 		// Configuración de la pose en el instante t
-		if (activeCamera) {
+		if (activeCamera) {	// sólo cuando se tiene la cámara en primera persona
 			if (isWalking == true) {
 				doctorCaminando->SetPose((float)animationCount, gBones);
 			}
@@ -332,7 +351,7 @@ bool Update() {
 			}
 		}
 		else {
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // limpia el búffer de dibujo, útil para tercera persona.
 		}
 		elapsedTime = 0.0f;
 
@@ -347,6 +366,7 @@ bool Update() {
 
 	// Cubemap (fondo)
 	{
+		// Transformaciones de cámara (Mantienen estático el fondo sin importar la cámara)
 		glm::mat4 projection;
 		glm::mat4 view;
 
@@ -362,8 +382,10 @@ bool Update() {
 		mainCubeMap->drawCubeMap(*cubemapShader, projection, view);
 	}
 	
+	// Utilizando Shader de iluminación.
 	 {
 		mLightsShader->use();
+		puertaShader->use(); // Shader de puerta
 
 		// Activamos para objetos transparentes
 		glEnable(GL_BLEND);
@@ -383,13 +405,17 @@ bool Update() {
 		
 		mLightsShader->setMat4("projection", projection);
 		mLightsShader->setMat4("view", view);
+		puertaShader->setMat4("projection", projection);
+		puertaShader->setMat4("view", view);
 
 		// Aplicamos transformaciones del modelo
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+
 		mLightsShader->setMat4("model", model);
+		puertaShader->setMat4("model", model);
 
 		// Configuramos propiedades de fuentes de luz
 		mLightsShader->setInt("numLights", (int)gLights.size());
@@ -401,8 +427,20 @@ bool Update() {
 			SetLightUniformInt(mLightsShader, "alphaIndex", i, gLights[i].alphaIndex);
 			SetLightUniformFloat(mLightsShader, "distance", i, gLights[i].distance);
 		}
-		
+
 		mLightsShader->setVec3("eye", camera.Position);
+
+		puertaShader->setInt("numLights", (int)gLights.size());
+		for (size_t i = 0; i < gLights.size(); ++i) {
+			SetLightUniformVec3(puertaShader, "Position", i, gLights[i].Position);
+			SetLightUniformVec3(puertaShader, "Direction", i, gLights[i].Direction);
+			SetLightUniformVec4(puertaShader, "Color", i, gLights[i].Color);
+			SetLightUniformVec4(puertaShader, "Power", i, gLights[i].Power);
+			SetLightUniformInt(puertaShader, "alphaIndex", i, gLights[i].alphaIndex);
+			SetLightUniformFloat(puertaShader, "distance", i, gLights[i].distance);
+		}
+		
+		puertaShader->setVec3("eye", camera.Position);
 
 		// Aplicamos propiedades materiales
 		mLightsShader->setVec4("MaterialAmbientColor", material01.ambient);
@@ -412,24 +450,32 @@ bool Update() {
 
 		hospital->Draw(*mLightsShader);
 
+		puertaShader->setVec4("MaterialAmbientColor", material01.ambient);
+		puertaShader->setVec4("MaterialDiffuseColor", material01.diffuse);
+		puertaShader->setVec4("MaterialSpecularColor", material01.specular);
+		puertaShader->setFloat("transparency", material01.transparency);
+
+		//puerta->Draw(*puertaShader);
+
 		model = glm::mat4(1.0f); // se reinicia la matriz de modelo.
 
 		// ------------------------- Agregar los modelos de las animaciones básicas, cada una con un shader y centrada en el origen en blender ---------
-		/* Efecto de puerta corrediza
-		 model = glm::translate(model, glm::vec3(0.418f + door_offset, 0.0f, 6.75f)); //Procesar solo la transición
+		//Efecto de puerta corrediza
+		 //model = glm::translate(model, glm::vec3(0.418f + door_offset, 0.0f, 6.75f)); //Procesar solo la transición
 		
 		// Efecto de puerta con bisagra
-		model = glm::rotate(model, glm::radians(door_rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-
+		model = glm::translate(model, glm::vec3(10.0f, 0.0f, 17.0f));
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // necesario por el cambio de coordenadas de blender
-		mLightsShader->setMat4("model", model); // mandando la matriz de modelo
+		model = glm::rotate(model, glm::radians(puerta_rotation), glm::vec3(0.0f, 0.0f, 1.0f));
+		
+		puertaShader->setMat4("model", model); // mandando la matriz de modelo
 
-		 door->Draw(*mLightsShader); // dibujado de la puerta 
-		 */
+		 puerta->Draw(*puertaShader); // dibujado de la puerta 
 	}
 
 	glUseProgram(0);
 
+	//Objetos estáticos
 	{
 		// Activamos el shader del plano
 		staticShader->use();
@@ -524,7 +570,61 @@ bool Update() {
 
 	glUseProgram(0);
 
-	
+	// Aplicamos Phong con acabado metálico.
+	{
+		// Activamos el shader de fresnel
+		metalPhongShader->use();
+
+		// Activamos para objetos transparentes
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		// Aplicamos transformaciones de proyección y cámara (si las hubiera)
+		glm::mat4 projection;
+		glm::mat4 view;
+
+		if (activeCamera) {
+			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
+			view = camera.GetViewMatrix();
+		}
+		else {
+			projection = glm::perspective(glm::radians(camera3rd.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
+			view = camera3rd.GetViewMatrix();
+		}
+
+		metalPhongShader->setMat4("projection", projection);
+		metalPhongShader->setMat4("view", view);
+
+		// Aplicamos transformaciones del modelo
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+
+		metalPhongShader->setMat4("model", model);
+
+		// Configuramos propiedades de fuentes de luz
+		metalPhongShader->setInt("numLights", (int)gLights.size());
+		for (size_t i = 0; i < gLights.size(); ++i) {
+			SetLightUniformVec3(metalPhongShader, "Position", i, gLights[i].Position);
+			SetLightUniformVec3(metalPhongShader, "Direction", i, gLights[i].Direction);
+			SetLightUniformVec4(metalPhongShader, "Color", i, gLights[i].Color);
+			SetLightUniformVec4(metalPhongShader, "Power", i, gLights[i].Power);
+			SetLightUniformInt(metalPhongShader, "alphaIndex", i, gLights[i].alphaIndex);
+			SetLightUniformFloat(metalPhongShader, "distance", i, gLights[i].distance);
+		}
+
+		metalPhongShader->setVec3("eye", camera.Position);
+		
+		// Aplicamos propiedades materiales
+		metalPhongShader->setVec4("MaterialAmbientColor", metal02.ambient);
+		metalPhongShader->setVec4("MaterialDiffuseColor", metal02.diffuse);
+		metalPhongShader->setVec4("MaterialSpecularColor", metal02.specular);
+
+		escritorio->Draw(*metalPhongShader);
+	}
+
+	glUseProgram(0);
 	// Dibujamos vidrio
 	{
 		// Activamos el shader de fresnel
@@ -572,7 +672,6 @@ bool Update() {
 	// Animaciones procedurales
 	/*
 	{
-
 	}
 	
 	glUseProgram(0);
@@ -643,6 +742,7 @@ void processInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+
 	// ------------------------ Movimiento de la cámara ----------------------
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		camera.ProcessKeyboard(FORWARD, deltaTime);
@@ -656,6 +756,7 @@ void processInput(GLFWwindow* window)
 		camera.ProcessKeyboard(UP, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		camera.ProcessKeyboard(DOWN, deltaTime);
+
 	// ------------------------- Modo de visualizar poligonos (vértices, mayas y texturas) -----------------
 	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -663,8 +764,10 @@ void processInput(GLFWwindow* window)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+
 	// -------------------------- Transformaciones básicas (puertas) ----------------------------
-	/*if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS) {
+	/*Desplazamiento sobre un eje
+	if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS) {
 		if(door_offset < 0.836f)
 			door_offset += 0.01f;			//offset de puerta
 	} 
@@ -673,13 +776,20 @@ void processInput(GLFWwindow* window)
 		if (door_offset > -0.836f)
 			door_offset -= 0.01f;
 	}
-		
-	if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS)
-		door_rotation += 1.f;
-	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
-		door_rotation -= 1.f;
 	*/
-	// Character movement
+	// Rotación de la puerta de madera
+	if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) {
+		if (puerta_rotation < 130.0f) {
+			puerta_rotation += 1.f;
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
+		if (puerta_rotation > 0.0f) {
+			puerta_rotation -= 1.f;
+		}
+	}
+	
+	// Movimiento del personaje (prácticamente sólo activa una variable y transforma la cámara)
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
 		isWalking = true;
 		position = position + scaleV * forwardView;
@@ -702,7 +812,7 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 		isWalking = true;
 		rotateCharacter += 0.5f;
-
+		//Se aplica la rotación
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::rotate(model, glm::radians(rotateCharacter), glm::vec3(0.0f, 1.0f, 0.0f));
 		glm::vec4 viewVector = model * glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
@@ -733,11 +843,22 @@ void processInput(GLFWwindow* window)
 		isWalking = false;
 	}
 
+	// ---------------------------------- Vistas de las cámaras ------------------------------------
 	if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS)
 		activeCamera = 0;
 	if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
 		activeCamera = 1;
 	
+	// ----------------------------------- Manejo del sonido ---------------------------------------
+	//Ejemplo de manejo de teclas para sonido
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+		if (vozSonando)
+			vozSonando->setIsPaused(true); // Pausando sonido
+	}
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+		if (vozSonando)
+			vozSonando->setIsPaused(false); // Reproduciendo sonido
+	}
 }
 
 // glfw: Actualizamos el puerto de vista si hay cambios del tamaño
