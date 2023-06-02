@@ -50,7 +50,7 @@ GLFWwindow* window;
 const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1080;
 
-// Definición de cámara (posición en XYZ)
+// Definición de las cámaras (posición en XYZ)
 Camera camera(glm::vec3(0.0f, 5.0f, 10.0f));
 Camera camera3rd(glm::vec3(0.0f, 10.0f, 5.0f));
 
@@ -247,7 +247,6 @@ bool Start() {
 	*/
 	camera3rd.Position = position;
 	camera3rd.Position.y += 5.0f;
-	camera3rd.Position.z += 3.0f;
 	camera3rd.Position -= forwardView;
 	camera3rd.Front = forwardView;
 
@@ -440,8 +439,18 @@ bool Update() {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		// Aplicamos transformaciones de proyección y cámara (si las hubiera)
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
-		glm::mat4 view = camera.GetViewMatrix();
+		glm::mat4 projection;
+		glm::mat4 view;
+
+		if (activeCamera) {
+			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
+			view = camera.GetViewMatrix();
+		}
+		else {
+			projection = glm::perspective(glm::radians(camera3rd.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
+			view = camera3rd.GetViewMatrix();
+		}
+
 		staticShader->setMat4("projection", projection);
 		staticShader->setMat4("view", view);
 
@@ -526,8 +535,18 @@ bool Update() {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		// Aplicamos transformaciones de proyección y cámara (si las hubiera)
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
-		glm::mat4 view = camera.GetViewMatrix();
+		glm::mat4 projection;
+		glm::mat4 view;
+
+		if (activeCamera) {
+			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
+			view = camera.GetViewMatrix();
+		}
+		else {
+			projection = glm::perspective(glm::radians(camera3rd.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
+			view = camera3rd.GetViewMatrix();
+		}
+		
 		fresnelShader->setMat4("projection", projection);
 		fresnelShader->setMat4("view", view);
 
@@ -545,8 +564,6 @@ bool Update() {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, mainCubeMap->textureID);
 		glDepthMask(GL_TRUE);
 		Glass->Draw(*fresnelShader);
-
-
 
 	}
 
