@@ -214,7 +214,7 @@ bool Start() {
 	// Para organización, crear el objeto y llamarlo por lo que es. Ejemplo:
 	// 
 	// consultorio = new Model("models/ProyectoFinal/<nombre_del_archivo>.fbx")
-	hospital = new Model("models/FachadaConsultorioTest1.fbx"); // Cargar aquí el modelo del consultorio
+	hospital = new Model("models/FachadaConsultorioTest2.fbx"); // Cargar aquí el modelo del consultorio
 	puerta = new Model("models/Puerta.fbx"); //Modelo de la puerta
 	escritorio = new Model("models/Escritorio.fbx");
 
@@ -464,7 +464,7 @@ bool Update() {
 		 //model = glm::translate(model, glm::vec3(0.418f + door_offset, 0.0f, 6.75f)); //Procesar solo la transición
 		
 		// Efecto de puerta con bisagra
-		model = glm::translate(model, glm::vec3(10.0f, 0.0f, 17.0f));
+		model = glm::translate(model, glm::vec3(10.1f, 0.0f, 17.3f));
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // necesario por el cambio de coordenadas de blender
 		model = glm::rotate(model, glm::radians(puerta_rotation), glm::vec3(0.0f, 0.0f, 1.0f));
 		
