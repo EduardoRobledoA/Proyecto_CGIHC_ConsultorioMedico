@@ -102,6 +102,15 @@ Model	*Esophagus;
 Model	*Heart;
 Model	*Glass;
 Model	*MetalBase;
+Model	*Red;
+Model	*Vein;
+Model	*CubeGlass;
+Model	*MetalCube;
+/*
+Model	*Blood;
+Model	*Sugar;
+Model	*InsulinKey;
+*/
 
 // Variables globales (que van a variar durante la ejecución del ciclo de renderizado)
 float tradius = 10.0f;
@@ -202,6 +211,7 @@ bool Start() {
 	fresnelShader = new Shader("shaders/11_Fresnel.vs", "shaders/11_Fresnel.fs");
 	puertaShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
 	metalPhongShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
+	wavesShader = new Shader("shaders/13_wavesAnimation.vs", "shaders/13_wavesAnimation.fs");
 
 	// Máximo número de huesos: 100
 	doctorCaminandoShader->setBonesIDs(MAX_RIGGING_BONES);
@@ -231,6 +241,16 @@ bool Start() {
 	Heart = new Model("models/Heart.fbx");
 	Glass = new Model("models/Glass.fbx");
 	MetalBase = new Model("models/MetalBase.fbx");
+	Red = new Model("models/Red.fbx");
+	Vein = new Model("models/Vein.fbx");
+	CubeGlass = new Model("models/CubeGlass.fbx");
+	MetalCube = new Model("models/MetalCube.fbx");
+
+	/*
+	Blood = new Model("models/Blood.fbx");
+	Sugar = new Model("models/Sugar.fbx");
+	InsulinKey = new Model("models/InsulinKey.fbx");
+	*/
 
 	// Cubemap
 	vector<std::string> faces
@@ -510,7 +530,7 @@ bool Update() {
 		floorObject->Draw(*staticShader);
 
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-12.8f, 5.2f, -2.7f)); // translate it down so it's at the center of the scene
+		model = glm::translate(model, glm::vec3(-12.8f, 5.2f, 1.3f)); // translate it down so it's at the center of the scene
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
 		staticShader->setMat4("model", model);
@@ -518,7 +538,7 @@ bool Update() {
 		Pancreas->Draw(*staticShader);
 
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-12.5f, 6.0f, -4.0f)); // translate it down so it's at the center of the scene
+		model = glm::translate(model, glm::vec3(-12.5f, 6.0f, 0.0f)); // translate it down so it's at the center of the scene
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
 		staticShader->setMat4("model", model);
@@ -526,7 +546,7 @@ bool Update() {
 		Stomach->Draw(*staticShader);
 
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-12.5f, 4.5f, -2.9f)); // translate it down so it's at the center of the scene
+		model = glm::translate(model, glm::vec3(-12.5f, 4.5f, 1.1f)); // translate it down so it's at the center of the scene
 		model = glm::rotate(model, glm::radians(-110.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(-270.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));	// it's a bit too big for our scene, so scale it down
@@ -535,7 +555,7 @@ bool Update() {
 		SmallIntestine->Draw(*staticShader);
 
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-12.25f, 4.3f, -3.4f)); // translate it down so it's at the center of the scene
+		model = glm::translate(model, glm::vec3(-12.25f, 4.3f, 0.6f)); // translate it down so it's at the center of the scene
 		model = glm::rotate(model, glm::radians(360.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.17f));	// it's a bit too big for our scene, so scale it down
 		staticShader->setMat4("model", model);
@@ -543,7 +563,7 @@ bool Update() {
 		LargeIntestine->Draw(*staticShader);
 
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-12.5f, 6.4f, -3.5f)); // translate it down so it's at the center of the scene
+		model = glm::translate(model, glm::vec3(-12.5f, 6.4f, 0.5f)); // translate it down so it's at the center of the scene
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.07f, 0.09f, 0.07f));	// it's a bit too big for our scene, so scale it down
 		staticShader->setMat4("model", model);
@@ -551,7 +571,7 @@ bool Update() {
 		Esophagus->Draw(*staticShader);
 
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-12.25f, 6.7f, -4.2f)); // translate it down so it's at the center of the scene
+		model = glm::translate(model, glm::vec3(-12.25f, 6.7f, -0.2f)); // translate it down so it's at the center of the scene
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
 		staticShader->setMat4("model", model);
@@ -559,13 +579,57 @@ bool Update() {
 		Heart->Draw(*staticShader);
 
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-12.5f, 1.25f, -3.5f));
+		model = glm::translate(model, glm::vec3(-12.5f, 1.25f, 0.5f));
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.25f));
 		staticShader->setMat4("model", model);
 
 		MetalBase->Draw(*staticShader);
+		
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-12.5f, 5.0f, -5.5f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.45f, 0.4f, 0.45f));
+		staticShader->setMat4("model", model);
 
+		Red->Draw(*staticShader);
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-12.5f, 0.7f, -7.0f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 3.5f, 2.5f));
+		staticShader->setMat4("model", model);
+
+		MetalCube->Draw(*staticShader);
+
+
+
+		/*
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-12.5f, 1.0f, -4.0f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		staticShader->setMat4("model", model);
+
+		Blood->Draw(*staticShader);
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-12.5f, 1.0f, -6.0f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		staticShader->setMat4("model", model);
+
+		Sugar->Draw(*staticShader);
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-12.5f, 1.0f, -8.0f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		staticShader->setMat4("model", model);
+
+		InsulinKey->Draw(*staticShader);
+		*/
 	}
 
 	glUseProgram(0);
@@ -652,7 +716,7 @@ bool Update() {
 
 		// Aplicamos transformaciones del modelo
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-12.5f, 5.0f, -3.5f));
+		model = glm::translate(model, glm::vec3(-12.5f, 5.0f, 0.5f));
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(1.5f, 1.5f, 2.5f));
 		fresnelShader->setMat4("model", model);
@@ -665,18 +729,58 @@ bool Update() {
 		glDepthMask(GL_TRUE);
 		Glass->Draw(*fresnelShader);
 
+		// Aplicamos transformaciones del modelo
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-12.5f, 5.0f, -7.0f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 3.5f, 2.0f));
+		fresnelShader->setMat4("model", model);
+		fresnelShader->setFloat("time", sineTime);
+		sineTime += 0.001;
+		fresnelShader->setFloat("transparency", 0.2f);
+
+		glDepthMask(GL_FALSE);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, mainCubeMap->textureID);
+		glDepthMask(GL_TRUE);
+		CubeGlass->Draw(*fresnelShader);
 	}
 
 	glUseProgram(0); 
 
-	// Animaciones procedurales
-	/*
+	// Animacion procedural
 	{
+		// Activamos el shader de WavesTime
+		wavesShader->use();
+
+		// Activamos para objetos transparentes
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		// Aplicamos transformaciones de proyección y cámara (si las hubiera)
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
+		glm::mat4 view = camera.GetViewMatrix();
+		wavesShader->setMat4("projection", projection);
+		wavesShader->setMat4("view", view);
+
+		// Aplicamos transformaciones del modelo
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-12.5f, 5.0f, -6.5f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+		wavesShader->setMat4("model", model);
+
+		wavesShader->setFloat("time", wavesTime);
+		wavesShader->setFloat("radius", 0.1f);
+		wavesShader->setFloat("height", 0.1f);
+
+		Vein->Draw(*wavesShader);
+		wavesTime += 0.01;
+
 	}
-	
+
 	glUseProgram(0);
-	*/
 	
+
 	
 	// Objetos animados por keyframes
 	{

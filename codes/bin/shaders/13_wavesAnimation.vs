@@ -19,8 +19,8 @@ void main()
 {
     
     vec4 PosL = vec4(aPos, 1.0f);
-    PosL.z += 0.5f * sin(PosL.x + 3*time); //amplitud, en z dado el perfil de blender
-    PosL.z += 0.1f * sin(PosL.y + time);
+    PosL.z += 0.001f * sin(PosL.x + time); //amplitud, en z dado el perfil de blender
+    PosL.z += 0.001f * sin(PosL.y + time);
 
     gl_Position = projection * view * model * PosL;
 
