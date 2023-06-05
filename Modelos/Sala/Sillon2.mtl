@@ -1,0 +1,33 @@
+newmtl SALA:None
+illum 4
+Kd 0.80 0.80 0.80
+Ka 0.80 0.80 0.80
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.80 0.80 0.80
+Ns 500.00
+newmtl SALA:atlasColores
+illum 4
+Kd 0.00 0.00 0.00
+Ka 1.00 1.00 1.00
+Tf 1.00 1.00 1.00
+map_Kd Atlas_Colores.png
+Ni 1.45
+Ks 0.50 0.50 0.50
+Ns 250.00
+newmtl SALA:material_34
+illum 4
+Kd 0.04 0.04 0.04
+Ka 1.00 1.00 1.00
+Tf 1.00 1.00 1.00
+Ni 1.45
+Ks 0.00 0.00 0.00
+Ns 0.00
+newmtl SALA:null_
+illum 4
+Kd 0.50 0.50 0.50
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
