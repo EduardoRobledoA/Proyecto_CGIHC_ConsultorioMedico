@@ -236,7 +236,7 @@ bool Start() {
 	escritorio = new Model("models/Escritorio.fbx");
 
 	doctorCaminando = new Model("models/doctorColor.fbx"); // Cargar modelo del personaje
-	doctorParado = new Model("models/doctorColorParado.fbx"); // Cargar modelo del personaje
+	doctorParado = new Model("models/doctorColorParadoEscalado.fbx"); // Cargar modelo del personaje
 	
 	//Órganos:
 	floorObject = new Model("models/floor.fbx");
@@ -772,8 +772,18 @@ bool Update() {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		// Aplicamos transformaciones de proyección y cámara (si las hubiera)
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
-		glm::mat4 view = camera.GetViewMatrix();
+		glm::mat4 projection;
+		glm::mat4 view;
+
+		if (activeCamera) {
+			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
+			view = camera.GetViewMatrix();
+		}
+		else {
+			projection = glm::perspective(glm::radians(camera3rd.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
+			view = camera3rd.GetViewMatrix();
+		}
+
 		wavesShader->setMat4("projection", projection);
 		wavesShader->setMat4("view", view);
 
@@ -954,7 +964,7 @@ void processInput(GLFWwindow* window)
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 		isWalking = true;
-		rotateCharacter += 0.5f;
+		rotateCharacter += 1.0f;
 		//Se aplica la rotación
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::rotate(model, glm::radians(rotateCharacter), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -969,7 +979,7 @@ void processInput(GLFWwindow* window)
 	}
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 		isWalking = true;
-		rotateCharacter -= 0.5f;
+		rotateCharacter -= 1.0f;
 
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::rotate(model, glm::radians(rotateCharacter), glm::vec3(0.0f, 1.0f, 0.0f));
