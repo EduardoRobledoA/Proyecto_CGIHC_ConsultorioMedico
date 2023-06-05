@@ -74,6 +74,8 @@ float     rotateCharacter = 0.0f; // variables de los personajes
 bool	  isWalking = false;
 //float	  door_offset = 0.0f; // variables de las puertas
 float	  puerta_rotation = 0.0f;
+float	  organos_rotation = 0.0f;
+float	  torrance_position = 0.0f;
 
 // Shaders (Referenciar para cada objeto uno diferente si es que se van a realizar animaciones)
 Shader *doctorCaminandoShader;
@@ -532,6 +534,7 @@ bool Update() {
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(-12.8f, 5.2f, 1.3f)); // translate it down so it's at the center of the scene
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(organos_rotation), glm::vec3(0.0f, 0.0f, 1.0f));
 		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
 		staticShader->setMat4("model", model);
 
@@ -540,6 +543,7 @@ bool Update() {
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(-12.5f, 6.0f, 0.0f)); // translate it down so it's at the center of the scene
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(organos_rotation), glm::vec3(0.0f, 0.0f, 1.0f));
 		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
 		staticShader->setMat4("model", model);
 
@@ -548,7 +552,7 @@ bool Update() {
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(-12.5f, 4.5f, 1.1f)); // translate it down so it's at the center of the scene
 		model = glm::rotate(model, glm::radians(-110.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(-270.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(-270.0f+organos_rotation), glm::vec3(0.0f, 0.0f, 1.0f));
 		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));	// it's a bit too big for our scene, so scale it down
 		staticShader->setMat4("model", model);
 
@@ -556,7 +560,7 @@ bool Update() {
 
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(-12.25f, 4.3f, 0.6f)); // translate it down so it's at the center of the scene
-		model = glm::rotate(model, glm::radians(360.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(360.0f+organos_rotation), glm::vec3(0.0f, 0.0f, 1.0f));
 		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.17f));	// it's a bit too big for our scene, so scale it down
 		staticShader->setMat4("model", model);
 
@@ -565,6 +569,7 @@ bool Update() {
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(-12.5f, 6.4f, 0.5f)); // translate it down so it's at the center of the scene
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(organos_rotation), glm::vec3(0.0f, 0.0f, 1.0f));
 		model = glm::scale(model, glm::vec3(0.07f, 0.09f, 0.07f));	// it's a bit too big for our scene, so scale it down
 		staticShader->setMat4("model", model);
 
@@ -573,6 +578,7 @@ bool Update() {
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(-12.25f, 6.7f, -0.2f)); // translate it down so it's at the center of the scene
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(organos_rotation), glm::vec3(0.0f, 0.0f, 1.0f));
 		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
 		staticShader->setMat4("model", model);
 
@@ -587,7 +593,7 @@ bool Update() {
 		MetalBase->Draw(*staticShader);
 		
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-12.5f, 5.0f, -5.5f));
+		model = glm::translate(model, glm::vec3(-12.5f, 5.0f+torrance_position, -5.5f));
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.45f, 0.4f, 0.45f));
 		staticShader->setMat4("model", model);
@@ -764,7 +770,7 @@ bool Update() {
 
 		// Aplicamos transformaciones del modelo
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-12.5f, 5.0f, -6.5f));
+		model = glm::translate(model, glm::vec3(-12.5f, 5.0f+torrance_position, -6.5f));
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
 		wavesShader->setMat4("model", model);
@@ -890,6 +896,30 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
 		if (puerta_rotation > 0.0f) {
 			puerta_rotation -= 1.f;
+		}
+	}
+
+	// Rotación de los organos
+	if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS) {
+		if (organos_rotation < 180.0f) {
+			organos_rotation += 1.f;
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS) {
+		if (organos_rotation > 0.0f) {
+			organos_rotation -= 1.f;
+		}
+	}
+
+	// Traslacion del torrente sanguineo
+	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
+		if (torrance_position < 1.0f) {
+			torrance_position += 0.01f;
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+		if (torrance_position > -1.0f) {
+			torrance_position -= 0.01f;
 		}
 	}
 	
