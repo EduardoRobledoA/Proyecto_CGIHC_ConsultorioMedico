@@ -74,7 +74,7 @@ float     rotateCharacter = 0.0f; // variables de los personajes
 bool	  isWalking = false;
 //float	  door_offset = 0.0f; // variables de las puertas
 float	  puerta_rotation = 0.0f;
-float	  organos_rotation = 0.0f;
+float	  organos_rotation = 0.0f; // variables de los órganos
 float	  torrance_position = 0.0f;
 
 // Shaders (Referenciar para cada objeto uno diferente si es que se van a realizar animaciones)
@@ -137,9 +137,14 @@ Light    lightMoon;
 glm::mat4 gBones[MAX_RIGGING_BONES];
 glm::mat4 gBonesBar[MAX_RIGGING_BONES];
 
-float	fps = 0.0f;
-int		keys = 0;
-int		animationCount = 0;
+// Variables de los modelos animados
+float	fpsCaminando = 0.0f;
+int		keysCaminando = 0;
+int		animationCountCaminando = 0;
+
+float	fpsParado = 0.0f;
+int		keysParado = 0;
+int		animationCountParado = 0;
 
 float proceduralTime = 0.0f;
 float wavesTime = 0.0f;
@@ -272,12 +277,12 @@ bool Start() {
 	doctorCaminando->SetPose(0.0f, gBones);//Pose inicial, y se sobreescribe en cada frame.
 	doctorParado->SetPose(0.0f, gBones);
 	
-	fps = (float)doctorCaminando->getFramerate();
-	keys = (int)doctorCaminando->getNumFrames();
-	/*
-	fps = (float)doctorParado->getFramerate(); // Dado que tiene más frames, tiende a crashear el programa
-	keys = (int)doctorParado->getNumFrames();
-	*/
+	fpsCaminando = (float)doctorCaminando->getFramerate();
+	keysCaminando = (int)doctorCaminando->getNumFrames();
+
+	fpsParado = (float)doctorParado->getFramerate(); // Necesario importar la de todos los modelos que se muevan
+	keysParado = (int)doctorParado->getNumFrames();
+
 	// Inicialización de la cámara (3ra persona)
 	camera3rd.Position = position;
 	camera3rd.Position.y += 5.0f;
@@ -313,7 +318,7 @@ bool Start() {
 	metal02.specular = glm::vec4(0.508273f, 0.508273f, 0.508273f, 1.0f);
 	
 	// --------------------------------------------------Efectos de sonido (sólo inicializaciones) -----------------------------------------
-	voz->setDefaultVolume(0.5f); //Estableciendo volumen
+	voz->setDefaultVolume(0.65f); //Estableciendo volumen
 	vozSonando = SoundEngine->play2D(voz, false, true); //preparando sonido (inicializado en mute).
 
 	return true;
@@ -357,19 +362,24 @@ bool Update() {
 	lastFrame = currentFrame;
 
 	elapsedTime += deltaTime;
-	if (elapsedTime > 1.0f / fps) {
-		animationCount++;
-		if (animationCount > keys - 1) {
-			animationCount = 0;
+	if (elapsedTime > 1.0f / fpsCaminando) {
+		// A partir de aquí se cuentan individualmente los frames de cada objeto
+		animationCountCaminando++;
+		if (animationCountCaminando > keysCaminando - 1) {
+			animationCountCaminando = 0;
+		}
+		animationCountParado++;
+		if (animationCountParado > keysParado - 1) {
+			animationCountParado = 0;
 		}
 
 		// Configuración de la pose en el instante t
 		if (activeCamera) {	// sólo cuando se tiene la cámara en primera persona
 			if (isWalking == true) {
-				doctorCaminando->SetPose((float)animationCount, gBones);
+				doctorCaminando->SetPose((float)animationCountCaminando, gBones);
 			}
 			else {
-				doctorParado->SetPose((float)animationCount, gBones);
+				doctorParado->SetPose((float)animationCountParado, gBones);
 			}
 		}
 		else {
@@ -477,7 +487,6 @@ bool Update() {
 		puertaShader->setVec4("MaterialSpecularColor", material01.specular);
 		puertaShader->setFloat("transparency", material01.transparency);
 
-		//puerta->Draw(*puertaShader);
 
 		model = glm::mat4(1.0f); // se reinicia la matriz de modelo.
 
@@ -926,7 +935,7 @@ void processInput(GLFWwindow* window)
 	// Movimiento del personaje (prácticamente sólo activa una variable y transforma la cámara)
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
 		isWalking = true;
-		position = position + scaleV * forwardView;
+		position = position + scaleV * forwardView * 5.5f;
 		camera3rd.Front = forwardView;
 		camera3rd.ProcessKeyboard(FORWARD, deltaTime);
 		camera3rd.Position = position;
@@ -936,7 +945,7 @@ void processInput(GLFWwindow* window)
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 		isWalking = true;
-		position = position - scaleV * forwardView;
+		position = position - scaleV * forwardView * 5.5f;
 		camera3rd.Front = forwardView;
 		camera3rd.ProcessKeyboard(BACKWARD, deltaTime);
 		camera3rd.Position = position;

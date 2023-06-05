@@ -1,29 +1,13 @@
-﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(503,5): warning MSB8004: El directorio Output no termina con una barra diagonal final. Esta instancia de compilación agregará la barra diagonal porque es necesaria para que se pueda evaluar correctamente el directorio Output.
+﻿D:\Programas\Microsoft\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(503,5): warning MSB8004: El directorio Output no termina con una barra diagonal final. Esta instancia de compilación agregará la barra diagonal porque es necesaria para que se pueda evaluar correctamente el directorio Output.
   ProyectoFinal.cpp
-C:\Users\nomad\Desktop\Proyecto_CGIHC_ConsultorioMedico\codes\ProyectoFinal\ProyectoFinal.cpp(730,20): warning C4305: '+=': truncamiento de 'double' a 'float'
-C:\Users\nomad\Desktop\Proyecto_CGIHC_ConsultorioMedico\codes\ProyectoFinal\ProyectoFinal.cpp(745,20): warning C4305: '+=': truncamiento de 'double' a 'float'
-C:\Users\nomad\Desktop\Proyecto_CGIHC_ConsultorioMedico\codes\ProyectoFinal\ProyectoFinal.cpp(783,20): warning C4305: '+=': truncamiento de 'double' a 'float'
-glad.lib(glad.obj) : warning LNK4099: no se encontró PDB '' con 'glad.lib(glad.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(init.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(init.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(window.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(window.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
+D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\ProyectoFinal\ProyectoFinal.cpp(739,20): warning C4305: '+=': truncamiento de 'double' a 'float'
+D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\ProyectoFinal\ProyectoFinal.cpp(754,20): warning C4305: '+=': truncamiento de 'double' a 'float'
+D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\ProyectoFinal\ProyectoFinal.cpp(792,20): warning C4305: '+=': truncamiento de 'double' a 'float'
 glfw3.lib(input.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(input.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(context.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(context.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(win32_time.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(win32_time.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(win32_thread.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(win32_thread.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(platform.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(platform.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
 glfw3.lib(monitor.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(monitor.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(vulkan.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(vulkan.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(win32_init.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(win32_init.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(null_init.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(null_init.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(win32_module.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(win32_module.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(win32_window.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(win32_window.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(win32_monitor.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(win32_monitor.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(win32_joystick.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(win32_joystick.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(wgl_context.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(wgl_context.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(egl_context.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(egl_context.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
+glfw3.lib(window.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(window.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
 glfw3.lib(null_monitor.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(null_monitor.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
 glfw3.lib(null_window.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(null_window.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(null_joystick.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(null_joystick.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(osmesa_context.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(osmesa_context.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-LINK : warning LNK4098: la biblioteca predeterminada'MSVCRT' entra en conflicto con otras bibliotecas; use la biblioteca /NODEFAULTLIB:biblioteca
-  ProyectoFinal.vcxproj -> C:\Users\nomad\Desktop\Proyecto_CGIHC_ConsultorioMedico\codes\bin\ProyectoFinal.exe
+glfw3.lib(win32_joystick.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(win32_joystick.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
+glfw3.lib(win32_window.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(win32_window.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
+  ProyectoFinal.vcxproj -> D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\bin\ProyectoFinal.exe
