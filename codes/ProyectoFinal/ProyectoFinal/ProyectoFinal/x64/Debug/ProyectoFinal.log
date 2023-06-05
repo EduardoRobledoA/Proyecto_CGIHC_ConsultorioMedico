@@ -1,13 +1,2 @@
-﻿D:\Programas\Microsoft\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(503,5): warning MSB8004: El directorio Output no termina con una barra diagonal final. Esta instancia de compilación agregará la barra diagonal porque es necesaria para que se pueda evaluar correctamente el directorio Output.
-  ProyectoFinal.cpp
-D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\ProyectoFinal\ProyectoFinal.cpp(739,20): warning C4305: '+=': truncamiento de 'double' a 'float'
-D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\ProyectoFinal\ProyectoFinal.cpp(754,20): warning C4305: '+=': truncamiento de 'double' a 'float'
-D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\ProyectoFinal\ProyectoFinal.cpp(792,20): warning C4305: '+=': truncamiento de 'double' a 'float'
-glfw3.lib(input.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(input.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(monitor.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(monitor.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(window.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(window.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(null_monitor.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(null_monitor.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(null_window.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(null_window.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(win32_joystick.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(win32_joystick.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-glfw3.lib(win32_window.obj) : warning LNK4099: no se encontró PDB '' con 'glfw3.lib(win32_window.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-  ProyectoFinal.vcxproj -> D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\bin\ProyectoFinal.exe
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(503,5): warning MSB8004: El directorio Output no termina con una barra diagonal final. Esta instancia de compilación agregará la barra diagonal porque es necesaria para que se pueda evaluar correctamente el directorio Output.
+  ProyectoFinal.vcxproj -> C:\Users\nomad\Desktop\Proyecto_CGIHC_ConsultorioMedico\codes\bin\ProyectoFinal.exe

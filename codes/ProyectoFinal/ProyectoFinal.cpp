@@ -231,7 +231,7 @@ bool Start() {
 	// Para organización, crear el objeto y llamarlo por lo que es. Ejemplo:
 	// 
 	// consultorio = new Model("models/ProyectoFinal/<nombre_del_archivo>.fbx")
-	hospital = new Model("models/FachadaConsultorioTest2.fbx"); // Cargar aquí el modelo del consultorio
+	hospital = new Model("models/FachadaConsultorioTest3.fbx"); // Cargar aquí el modelo del consultorio
 	puerta = new Model("models/Puerta.fbx"); //Modelo de la puerta
 	escritorio = new Model("models/Escritorio.fbx");
 
