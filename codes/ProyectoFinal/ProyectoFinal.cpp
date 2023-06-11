@@ -231,7 +231,7 @@ bool Start() {
 	// Para organización, crear el objeto y llamarlo por lo que es. Ejemplo:
 	// 
 	// consultorio = new Model("models/ProyectoFinal/<nombre_del_archivo>.fbx")
-	hospital = new Model("models/FachadaConsultorioTest3.fbx"); // Cargar aquí el modelo del consultorio
+	hospital = new Model("models/FachadaConsultorioTest4.fbx"); // Cargar aquí el modelo del consultorio
 	puerta = new Model("models/Puerta.fbx"); //Modelo de la puerta
 	escritorio = new Model("models/Escritorio.fbx");
 
@@ -262,12 +262,12 @@ bool Start() {
 	// Cubemap
 	vector<std::string> faces
 	{
-		"textures/cubemap/01/posx.jpeg",
-		"textures/cubemap/01/negx.jpeg",
-		"textures/cubemap/01/posy.jpeg",
-		"textures/cubemap/01/negy.jpeg",
-		"textures/cubemap/01/posz.jpeg",
-		"textures/cubemap/01/negz.jpeg"
+		"textures/cubemap/01/posx.jpg",
+		"textures/cubemap/01/negx.jpg",
+		"textures/cubemap/01/posy.jpg",
+		"textures/cubemap/01/negy.jpg",
+		"textures/cubemap/01/posz.jpg",
+		"textures/cubemap/01/negz.jpg"
 	};
 	mainCubeMap = new CubeMap();
 	mainCubeMap->loadCubemap(faces);
