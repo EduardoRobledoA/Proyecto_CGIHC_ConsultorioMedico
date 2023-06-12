@@ -1,6 +1,6 @@
-﻿D:\Programas\Microsoft\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(503,5): warning MSB8004: El directorio Output no termina con una barra diagonal final. Esta instancia de compilación agregará la barra diagonal porque es necesaria para que se pueda evaluar correctamente el directorio Output.
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(503,5): warning MSB8004: El directorio Output no termina con una barra diagonal final. Esta instancia de compilación agregará la barra diagonal porque es necesaria para que se pueda evaluar correctamente el directorio Output.
   ProyectoFinal.cpp
-D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\ProyectoFinal\ProyectoFinal.cpp(782,20): warning C4305: '+=': truncamiento de 'double' a 'float'
-D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\ProyectoFinal\ProyectoFinal.cpp(797,20): warning C4305: '+=': truncamiento de 'double' a 'float'
-D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\ProyectoFinal\ProyectoFinal.cpp(845,20): warning C4305: '+=': truncamiento de 'double' a 'float'
-  ProyectoFinal.vcxproj -> D:\Facultad\8vo Semestre\Compu Gráfica\Proyecto Repositorio\Proyecto_CGIHC_ConsultorioMedico\codes\bin\ProyectoFinal.exe
+C:\Users\nomad\Desktop\Proyecto_CGIHC_ConsultorioMedico\codes\ProyectoFinal\ProyectoFinal.cpp(737,20): warning C4305: '+=': truncamiento de 'double' a 'float'
+C:\Users\nomad\Desktop\Proyecto_CGIHC_ConsultorioMedico\codes\ProyectoFinal\ProyectoFinal.cpp(752,20): warning C4305: '+=': truncamiento de 'double' a 'float'
+C:\Users\nomad\Desktop\Proyecto_CGIHC_ConsultorioMedico\codes\ProyectoFinal\ProyectoFinal.cpp(800,20): warning C4305: '+=': truncamiento de 'double' a 'float'
+  ProyectoFinal.vcxproj -> C:\Users\nomad\Desktop\Proyecto_CGIHC_ConsultorioMedico\codes\bin\ProyectoFinal.exe

@@ -76,6 +76,7 @@ bool	  isWalking = false;
 float	  puerta_rotation = 0.0f;
 float	  organos_rotation = 0.0f; // variables de los órganos
 float	  torrance_position = 0.0f;
+float	  models_scale = 0.0f;
 
 // Shaders (Referenciar para cada objeto uno diferente si es que se van a realizar animaciones)
 Shader *doctorCaminandoShader;
@@ -96,23 +97,18 @@ Model	*hospital;
 Model   *puerta;
 Model   *escritorio;
 Model   *floorObject;
-Model	*Pancreas;
-Model	*Stomach;
-Model	*SmallIntestine;
-Model	*LargeIntestine;
-Model	*Esophagus;
-Model	*Heart;
+//Model	*Pancreas;
+Model	*DigestiveSystem;
 Model	*Glass;
 Model	*MetalBase;
 Model	*Red;
 Model	*Vein;
 Model	*CubeGlass;
 Model	*MetalCube;
-/*
 Model	*Blood;
 Model	*Sugar;
 Model	*InsulinKey;
-*/
+
 
 // Variables globales (que van a variar durante la ejecución del ciclo de renderizado)
 float tradius = 10.0f;
@@ -242,12 +238,8 @@ bool Start() {
 	
 	//Órganos:
 	floorObject = new Model("models/floor.fbx");
-	Pancreas = new Model("models/Pancreas.fbx");
-	Stomach = new Model("models/Stomach.fbx");
-	SmallIntestine = new Model("models/SmallIntestine.fbx");
-	LargeIntestine = new Model("models/LargeIntestine.fbx");
-	Esophagus = new Model("models/Esophagus.fbx");
-	Heart = new Model("models/Heart.fbx");
+	//Pancreas = new Model("models/Pancreas.fbx");
+	DigestiveSystem = new Model("models/DigestiveSystem.fbx");
 	Glass = new Model("models/Glass.fbx");
 	MetalBase = new Model("models/MetalBase.fbx");
 	Red = new Model("models/Red.fbx");
@@ -255,11 +247,11 @@ bool Start() {
 	CubeGlass = new Model("models/CubeGlass.fbx");
 	MetalCube = new Model("models/MetalCube.fbx");
 
-	/*
+	
 	Blood = new Model("models/Blood.fbx");
 	Sugar = new Model("models/Sugar.fbx");
 	InsulinKey = new Model("models/InsulinKey.fbx");
-	*/
+	
 
 	// Cubemap
 	vector<std::string> faces
@@ -578,7 +570,7 @@ bool Update() {
 		staticShader->setMat4("model", model);
 
 		floorObject->Draw(*staticShader);
-
+		/*
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(-12.8f, 5.2f, 1.3f)); // translate it down so it's at the center of the scene
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -587,50 +579,15 @@ bool Update() {
 		staticShader->setMat4("model", model);
 
 		Pancreas->Draw(*staticShader);
-
+		*/
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-12.5f, 6.0f, 0.0f)); // translate it down so it's at the center of the scene
+		model = glm::translate(model, glm::vec3(-12.5f, 1.8f, 0.45f)); // translate it down so it's at the center of the scene
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(organos_rotation), glm::vec3(0.0f, 0.0f, 1.0f));
 		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
 		staticShader->setMat4("model", model);
 
-		Stomach->Draw(*staticShader);
-
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-12.5f, 4.5f, 1.1f)); // translate it down so it's at the center of the scene
-		model = glm::rotate(model, glm::radians(-110.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(-270.0f+organos_rotation), glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));	// it's a bit too big for our scene, so scale it down
-		staticShader->setMat4("model", model);
-
-		SmallIntestine->Draw(*staticShader);
-
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-12.25f, 4.3f, 0.6f)); // translate it down so it's at the center of the scene
-		model = glm::rotate(model, glm::radians(360.0f+organos_rotation), glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.17f));	// it's a bit too big for our scene, so scale it down
-		staticShader->setMat4("model", model);
-
-		LargeIntestine->Draw(*staticShader);
-
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-12.5f, 6.4f, 0.5f)); // translate it down so it's at the center of the scene
-		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(organos_rotation), glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::scale(model, glm::vec3(0.07f, 0.09f, 0.07f));	// it's a bit too big for our scene, so scale it down
-		staticShader->setMat4("model", model);
-
-		Esophagus->Draw(*staticShader);
-
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-12.25f, 6.7f, -0.2f)); // translate it down so it's at the center of the scene
-		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(organos_rotation), glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
-		staticShader->setMat4("model", model);
-
-		Heart->Draw(*staticShader);
+		DigestiveSystem->Draw(*staticShader);
 
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(-12.5f, 1.25f, 0.5f));
@@ -656,34 +613,32 @@ bool Update() {
 
 		MetalCube->Draw(*staticShader);
 
-
-
-		/*
+		
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-12.5f, 1.0f, -4.0f));
+		model = glm::translate(model, glm::vec3(-12.5f, 3.8f, -4.0f));
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		model = glm::scale(model, glm::vec3(0.2f+ models_scale, 0.2f+ models_scale, 0.2f+ models_scale));
 		staticShader->setMat4("model", model);
 
 		Blood->Draw(*staticShader);
-
+		
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-12.5f, 1.0f, -6.0f));
+		model = glm::translate(model, glm::vec3(-12.5f, 3.8f, -7.0f));
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		model = glm::scale(model, glm::vec3(0.3f+ models_scale, 0.3f+ models_scale, 0.3f+ models_scale));
 		staticShader->setMat4("model", model);
 
 		Sugar->Draw(*staticShader);
-
+		
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-12.5f, 1.0f, -8.0f));
-		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(-12.5f, 3.8f, -9.5f));
+		model = glm::rotate(model, glm::radians(-180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+		model = glm::scale(model, glm::vec3(0.1f+ models_scale, 0.1f+ models_scale, 0.05f+ models_scale));
 		staticShader->setMat4("model", model);
 
 		InsulinKey->Draw(*staticShader);
-		*/
+
 	}
 
 	glUseProgram(0);
@@ -964,24 +919,36 @@ void processInput(GLFWwindow* window)
 	// Rotación de los organos
 	if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS) {
 		if (organos_rotation < 180.0f) {
-			organos_rotation += 1.f;
+			organos_rotation += 2.0f;
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS) {
-		if (organos_rotation > 0.0f) {
-			organos_rotation -= 1.f;
+		if (organos_rotation > -180.0f) {
+			organos_rotation -= 2.0f;
 		}
 	}
 
 	// Traslacion del torrente sanguineo
 	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
 		if (torrance_position < 1.0f) {
-			torrance_position += 0.01f;
+			torrance_position += 0.09f;
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
-		if (torrance_position > -1.0f) {
-			torrance_position -= 0.01f;
+		if (torrance_position > -0.2f) {
+			torrance_position -= 0.09f;
+		}
+	}
+
+	// Escala de modelos de sangre, glucosa e insulina
+	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
+		if (models_scale < 0.03f) {
+			models_scale += 0.001f;
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) {
+		if (models_scale > -0.03f) {
+			models_scale -= 0.001f;
 		}
 	}
 	
