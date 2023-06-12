@@ -88,10 +88,12 @@ Shader *staticShader;
 Shader *fresnelShader;
 Shader *puertaShader;
 Shader *metalPhongShader;
+//Shader *ambulanceShader;
 
 // Carga la información del modelo (poner referencias de los modelos a utilizar)
 Model	*doctorCaminando;
 Model	*doctorParado;
+Model* ambulancia;
 Model	*hospital;
 Model   *puerta;
 Model   *escritorio;
@@ -219,6 +221,7 @@ bool Start() {
 	puertaShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
 	metalPhongShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
 	wavesShader = new Shader("shaders/13_wavesAnimation.vs", "shaders/13_wavesAnimation.fs");
+	//ambulanceShader = new Shader("shaders/10_vertex_simple.vs", "shaders/10_fragment_simple.fs");
 
 	// Máximo número de huesos: 100
 	doctorCaminandoShader->setBonesIDs(MAX_RIGGING_BONES);
@@ -231,7 +234,8 @@ bool Start() {
 	// Para organización, crear el objeto y llamarlo por lo que es. Ejemplo:
 	// 
 	// consultorio = new Model("models/ProyectoFinal/<nombre_del_archivo>.fbx")
-	hospital = new Model("models/FachadaConsultorioTest5.fbx"); // Cargar aquí el modelo del consultorio
+	hospital = new Model("models/FachadaConsultorioTest6.fbx"); // Cargar aquí el modelo del consultorio
+	//ambulancia = new Model("models/ambulancia.fbx"); // Cargar aquí el modelo ambulancia
 	puerta = new Model("models/Puerta.fbx"); //Modelo de la puerta
 	escritorio = new Model("models/Escritorio.fbx");
 
@@ -418,6 +422,7 @@ bool Update() {
 	 {
 		mLightsShader->use();
 		puertaShader->use(); // Shader de puerta
+		//ambulanceShader->use();
 
 		// Activamos para objetos transparentes
 		glEnable(GL_BLEND);
@@ -439,6 +444,8 @@ bool Update() {
 		mLightsShader->setMat4("view", view);
 		puertaShader->setMat4("projection", projection);
 		puertaShader->setMat4("view", view);
+		//ambulanceShader->setMat4("projection", projection);
+		//ambulanceShader->setMat4("view", view);
 
 		// Aplicamos transformaciones del modelo
 		glm::mat4 model = glm::mat4(1.0f);
@@ -448,6 +455,7 @@ bool Update() {
 
 		mLightsShader->setMat4("model", model);
 		puertaShader->setMat4("model", model);
+		//ambulanceShader->setMat4("model", model);
 
 		// Configuramos propiedades de fuentes de luz
 		mLightsShader->setInt("numLights", (int)gLights.size());
@@ -481,6 +489,7 @@ bool Update() {
 		mLightsShader->setFloat("transparency", material01.transparency);
 
 		hospital->Draw(*mLightsShader);
+		//ambulancia->Draw(*ambulanceShader);
 
 		puertaShader->setVec4("MaterialAmbientColor", material01.ambient);
 		puertaShader->setVec4("MaterialDiffuseColor", material01.diffuse);
