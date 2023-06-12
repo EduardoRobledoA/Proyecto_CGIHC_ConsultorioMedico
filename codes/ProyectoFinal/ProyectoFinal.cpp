@@ -51,8 +51,8 @@ const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1080;
 
 // Definición de las cámaras (posición en XYZ)
-Camera camera(glm::vec3(0.0f, 5.0f, 10.0f));
-Camera camera3rd(glm::vec3(0.0f, 10.0f, 5.0f));
+Camera camera(glm::vec3(0.0f, 5.0f, 10.0f)); // Es nuestro punto de partida
+Camera camera3rd(glm::vec3(0.0f, 10.0f, 5.0f)); // Acomodar en posición del doc
 
 // Controladores para el movimiento del mouse
 float lastX = SCR_WIDTH / 2.0f;
@@ -88,12 +88,10 @@ Shader *staticShader;
 Shader *fresnelShader;
 Shader *puertaShader;
 Shader *metalPhongShader;
-//Shader *ambulanceShader;
 
 // Carga la información del modelo (poner referencias de los modelos a utilizar)
 Model	*doctorCaminando;
 Model	*doctorParado;
-Model* ambulancia;
 Model	*hospital;
 Model   *puerta;
 Model   *escritorio;
@@ -131,9 +129,11 @@ Sugerencia: Material <tipoDeMaterial>
 Material material01;
 Material metal02;
 
-// Light gLight;
+// Creación de luces con Light gLight;
 std::vector<Light> gLights;
-Light    lightMoon;
+
+// Movimiento dinámico de luces (Experimento 3):
+glm::vec3 lPosition = glm::vec3(0.0f); //automáticamente crea el vector lleno del valor
 
 // Pose inicial del modelo de doctor y paciente
 glm::mat4 gBones[MAX_RIGGING_BONES];
@@ -157,7 +157,7 @@ irrklang::ISoundSource *voz = SoundEngine->addSoundSourceFromFile("sound/Dialogo
 irrklang::ISound *vozSonando;
 
 // selección de cámara
-bool    activeCamera = 1; // activamos la primera cámara
+bool    activeCamera = 1; // 1 = Cámara modo libre, 0 = Cámara vista desde el doctor
 
 // Entrada a función principal (no moverle)
 int main()
@@ -221,7 +221,6 @@ bool Start() {
 	puertaShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
 	metalPhongShader = new Shader("shaders/11_PhongShaderMultLights.vs", "shaders/11_PhongShaderMultLights.fs");
 	wavesShader = new Shader("shaders/13_wavesAnimation.vs", "shaders/13_wavesAnimation.fs");
-	//ambulanceShader = new Shader("shaders/10_vertex_simple.vs", "shaders/10_fragment_simple.fs");
 
 	// Máximo número de huesos: 100
 	doctorCaminandoShader->setBonesIDs(MAX_RIGGING_BONES);
@@ -235,7 +234,6 @@ bool Start() {
 	// 
 	// consultorio = new Model("models/ProyectoFinal/<nombre_del_archivo>.fbx")
 	hospital = new Model("models/FachadaConsultorioTest6.fbx"); // Cargar aquí el modelo del consultorio
-	//ambulancia = new Model("models/ambulancia.fbx"); // Cargar aquí el modelo ambulancia
 	puerta = new Model("models/Puerta.fbx"); //Modelo de la puerta
 	escritorio = new Model("models/Escritorio.fbx");
 
@@ -296,24 +294,27 @@ bool Start() {
 	// --------------------------Lights configuration (se meten a un arreglo, pueden desactivarse)----------------------------
 	
 	Light light01;
-	light01.Position = glm::vec3(5.0f, 2.0f, 5.0f);
+	light01.Position = glm::vec3(7.0f, 17.5f, 1.5f);
 	light01.Color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f); // color de las luces. Al estar en la misma medida, son blancas
-	gLights.push_back(light01);
+	light01.Direction = glm::vec3(1.0f, 1.0f, 1.0f); // Dirección (no aplica para fuentes puntuales)
+	//gLights.push_back(light01);
 
 	Light light02;
-	light02.Position = glm::vec3(-5.0f, 2.0f, 5.0f);
+	light02.Position = glm::vec3(8.1f, 15.4f, -2.1f);
 	light02.Color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
+	light02.Direction = glm::vec3(1.0f, 1.0f, 1.0f); // Dirección (no aplica para fuentes puntuales)
 	gLights.push_back(light02);
 
 	Light light03;
-	light03.Position = glm::vec3(5.0f, 2.0f, -5.0f);
+	light03.Position = glm::vec3(-16.0f, 32.0f, 34.3f);
 	light03.Color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
+	light03.Direction = glm::vec3(1.0f, 1.0f, 1.0f); // Dirección (no aplica para fuentes puntuales)
 	gLights.push_back(light03);
 
 	Light light04;
 	light04.Position = glm::vec3(-5.0f, 2.0f, -5.0f);
 	light04.Color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
-	gLights.push_back(light04);
+	//gLights.push_back(light04);
 
 	//------------------------------------------------- Editando instancias de propiedades del material--------------------------------
 	// Acabado metálico
@@ -391,6 +392,11 @@ bool Update() {
 		}
 		elapsedTime = 0.0f;
 
+		// Procesa la entrada del teclado o mouse
+		/*
+		processInput(window);
+		gLights[0].Position = lPosition; // cambiar indice para cambiar fuente de luz a mover.
+		*/
 	}
 
 	// Procesa la entrada del teclado o mouse
@@ -421,8 +427,8 @@ bool Update() {
 	// Utilizando Shader de iluminación.
 	 {
 		mLightsShader->use();
+		//metalPhongShader->use();
 		puertaShader->use(); // Shader de puerta
-		//ambulanceShader->use();
 
 		// Activamos para objetos transparentes
 		glEnable(GL_BLEND);
@@ -444,8 +450,8 @@ bool Update() {
 		mLightsShader->setMat4("view", view);
 		puertaShader->setMat4("projection", projection);
 		puertaShader->setMat4("view", view);
-		//ambulanceShader->setMat4("projection", projection);
-		//ambulanceShader->setMat4("view", view);
+		//metalPhongShader->setMat4("projection", projection);
+		//metalPhongShader->setMat4("view", view);
 
 		// Aplicamos transformaciones del modelo
 		glm::mat4 model = glm::mat4(1.0f);
@@ -455,7 +461,9 @@ bool Update() {
 
 		mLightsShader->setMat4("model", model);
 		puertaShader->setMat4("model", model);
-		//ambulanceShader->setMat4("model", model);
+
+		//model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));	// it's a bit too big for our scene, so scale it down
+		//metalPhongShader->setMat4("model", model);
 
 		// Configuramos propiedades de fuentes de luz
 		mLightsShader->setInt("numLights", (int)gLights.size());
@@ -482,6 +490,21 @@ bool Update() {
 		
 		puertaShader->setVec3("eye", camera.Position);
 
+		/*
+		// Configuramos propiedades de fuentes de luz
+		metalPhongShader->setInt("numLights", (int)gLights.size());
+		for (size_t i = 0; i < gLights.size(); ++i) {
+			SetLightUniformVec3(metalPhongShader, "Position", i, gLights[i].Position);
+			SetLightUniformVec3(metalPhongShader, "Direction", i, gLights[i].Direction);
+			SetLightUniformVec4(metalPhongShader, "Color", i, gLights[i].Color);
+			SetLightUniformVec4(metalPhongShader, "Power", i, gLights[i].Power);
+			SetLightUniformInt(metalPhongShader, "alphaIndex", i, gLights[i].alphaIndex);
+			SetLightUniformFloat(metalPhongShader, "distance", i, gLights[i].distance);
+		}
+
+		metalPhongShader->setVec3("eye", camera.Position);*/
+
+
 		// Aplicamos propiedades materiales
 		mLightsShader->setVec4("MaterialAmbientColor", material01.ambient);
 		mLightsShader->setVec4("MaterialDiffuseColor", material01.diffuse);
@@ -489,7 +512,14 @@ bool Update() {
 		mLightsShader->setFloat("transparency", material01.transparency);
 
 		hospital->Draw(*mLightsShader);
-		//ambulancia->Draw(*ambulanceShader);
+
+		// Aplicamos propiedades materiales
+		metalPhongShader->setVec4("MaterialAmbientColor", metal02.ambient);
+		metalPhongShader->setVec4("MaterialDiffuseColor", metal02.diffuse);
+		metalPhongShader->setVec4("MaterialSpecularColor", metal02.specular);
+		metalPhongShader->setFloat("transparency", metal02.transparency);
+
+		escritorio->Draw(*metalPhongShader);
 
 		puertaShader->setVec4("MaterialAmbientColor", material01.ambient);
 		puertaShader->setVec4("MaterialDiffuseColor", material01.diffuse);
@@ -658,16 +688,16 @@ bool Update() {
 
 	glUseProgram(0);
 
+	
 	// Aplicamos Phong con acabado metálico.
+	/*
 	{
-		// Activamos el shader de fresnel
-		metalPhongShader->use();
+		puertaShader->use(); // Shader de puerta
 
 		// Activamos para objetos transparentes
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		// Aplicamos transformaciones de proyección y cámara (si las hubiera)
 		glm::mat4 projection;
 		glm::mat4 view;
 
@@ -687,9 +717,11 @@ bool Update() {
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+		model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));	// it's a bit too big for our scene, so scale it down
 
+		//model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));	// it's a bit too big for our scene, so scale it down
 		metalPhongShader->setMat4("model", model);
+
 
 		// Configuramos propiedades de fuentes de luz
 		metalPhongShader->setInt("numLights", (int)gLights.size());
@@ -703,16 +735,18 @@ bool Update() {
 		}
 
 		metalPhongShader->setVec3("eye", camera.Position);
-		
+
 		// Aplicamos propiedades materiales
 		metalPhongShader->setVec4("MaterialAmbientColor", metal02.ambient);
 		metalPhongShader->setVec4("MaterialDiffuseColor", metal02.diffuse);
 		metalPhongShader->setVec4("MaterialSpecularColor", metal02.specular);
+		metalPhongShader->setFloat("transparency", metal02.transparency);
 
 		escritorio->Draw(*metalPhongShader);
 	}
 
 	glUseProgram(0);
+	*/
 	// Dibujamos vidrio
 	{
 		// Activamos el shader de fresnel
@@ -1021,6 +1055,32 @@ void processInput(GLFWwindow* window)
 		if (vozSonando)
 			vozSonando->setIsPaused(false); // Reproduciendo sonido
 	}
+
+	// ----------------------------------- Auxiliar para ubicación en OpenGL ---------------------------------------
+	//Cada que se presione, muestra la posición de la cámara libre/cámara del doctor
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
+		if (activeCamera) {
+			printf("\nPosicion de la camara:\nX: %f\nY: %f\nZ: %f\n\n", camera.Position.x, camera.Position.y, camera.Position.z);
+			printf("\nPosicion de la luz:\nX: %f\nY: %f\nZ: %f\n\n", gLights[0].Position.x, gLights[0].Position.y, gLights[0].Position.z);
+		}
+		else {
+			printf("\nPosicion de la camara:\nX: %f\nY: %f\nZ: %f\n\n", camera3rd.Position.x, camera3rd.Position.y, camera3rd.Position.z);
+		}
+	}
+
+	// Variables debug para la luz
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+		lPosition.y += 0.1f;
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+		lPosition.y -= 0.1f;
+	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+		lPosition.x -= 0.1f;
+	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
+		lPosition.x += 0.1f;
+	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
+		lPosition.z -= 0.1f;
+	if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
+		lPosition.z += 0.1f;
 }
 
 // glfw: Actualizamos el puerto de vista si hay cambios del tamaño

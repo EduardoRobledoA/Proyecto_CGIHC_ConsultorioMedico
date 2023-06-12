@@ -23,7 +23,7 @@ public:
 		Direction = glm::vec3(1.0f, 0.0f, 0.0f); // Dirección (no aplica para fuentes puntuales)
 		Color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f); // Color de la fuente de luz
 		Power = glm::vec4(20.0f, 20.0f, 20.0f, 1.0f); // Potencia en Watts
-		alphaIndex = 10; // potencia del brillo especular
+		alphaIndex = 5; // potencia del brillo especular
 		distance = 3.0f;
 	}
 	~Light() {}
