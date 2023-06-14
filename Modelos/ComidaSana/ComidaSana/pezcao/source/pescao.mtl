@@ -1,0 +1,60 @@
+newmtl Peixe-material
+Ka 0.000000 0.000000 0.000000
+Kd 0.273400 0.800000 0.262734
+Ks 0.000000 0.000000 0.000000
+adobe_interior_color 0.803922 0.803922 0.803922
+Ns 2.000000
+d 1.000000
+Tr 0.000000
+Pr 6.666667
+Pm 0.000000
+adobe_density 0.000000
+adobe_translucence 0.000000
+adobe_glow 0.000000
+map_Kd Peixe-material - Textura padrão.PNG 
+
+newmtl Materiais-material
+Ka 0.000000 0.000000 0.000000
+Kd 0.015420 0.041876 0.800000
+Ks 0.000000 0.000000 0.000000
+adobe_interior_color 0.803922 0.803922 0.803922
+Ns 2.000000
+d 1.000000
+Tr 0.000000
+Pr 6.666667
+Pm 0.000000
+adobe_density 0.000000
+adobe_translucence 0.000000
+adobe_glow 0.000000
+map_Kd Materiais-material - Textura padrão.PNG 
+
+newmtl Cinta-material
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.655477 0.093618
+Ks 0.000000 0.000000 0.000000
+adobe_interior_color 0.803922 0.803922 0.803922
+Ns 2.000000
+d 1.000000
+Tr 0.000000
+Pr 6.666667
+Pm 0.000000
+adobe_density 0.000000
+adobe_translucence 0.000000
+adobe_glow 0.000000
+map_Kd Cinta-material - Textura padrão0000.png 
+
+newmtl Plastico-material
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.010482 0.479664
+Ks 0.000000 0.000000 0.000000
+adobe_interior_color 0.803922 0.803922 0.803922
+Ns 2.000000
+d 1.000000
+Tr 0.000000
+Pr 6.666667
+Pm 0.000000
+adobe_density 0.000000
+adobe_translucence 0.000000
+adobe_glow 0.000000
+map_Kd Plastico-material - Textura padrão.PNG 
+
