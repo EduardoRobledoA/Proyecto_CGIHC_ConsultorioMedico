@@ -149,7 +149,7 @@ float wavesTime = 0.0f;
 
 // Audio (se pueden agregar para que se ejecuten cuando se abra una puerta por ejemplo)
 ISoundEngine *SoundEngine = createIrrKlangDevice();//Creación del motor de sonido---------------------------------------------------------------------------------------------
-irrklang::ISoundSource *voz = SoundEngine->addSoundSourceFromFile("sound/Dialogo2.mp3"); // revisar línea 245 para más info
+irrklang::ISoundSource *voz = SoundEngine->addSoundSourceFromFile("sound/Dialogo.mp3"); // revisar línea 245 para más info
 irrklang::ISound *vozSonando;
 
 // selección de cámara
